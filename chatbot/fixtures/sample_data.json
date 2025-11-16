@@ -1,0 +1,65 @@
+[
+  {
+    "model": "chatbot.agriculturalfaq",
+    "pk": 1,
+    "fields": {
+      "question": "What are common pests affecting maize in Malawi?",
+      "answer": "Common maize pests include fall armyworm, maize stalk borer, and aphids. Fall armyworm causes significant damage to leaves and ears. Control measures include timely planting, use of resistant varieties, and application of appropriate insecticides.",
+      "category": "pests",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "chatbot.agriculturalfaq",
+    "pk": 2,
+    "fields": {
+      "question": "How often should I apply fertilizer to tobacco crops?",
+      "answer": "Tobacco requires nitrogen, phosphorus, and potassium. Apply basal fertilizer at planting, followed by top dressing at 4-6 weeks and again at 8-10 weeks. Monitor soil pH and nutrient levels regularly.",
+      "category": "fertilizers",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "chatbot.pestinfo",
+    "pk": 1,
+    "fields": {
+      "name": "Fall Armyworm",
+      "description": "A destructive pest that attacks maize and other crops.",
+      "symptoms": "Irregular holes in leaves, skeletonized foliage, damaged ears.",
+      "treatment": "Use biological control agents like Bacillus thuringiensis, or chemical insecticides like lambda-cyhalothrin.",
+      "prevention": "Plant early, use resistant varieties, practice crop rotation.",
+      "category": "insects"
+    }
+  },
+  {
+    "model": "chatbot.fertilizerguideline",
+    "pk": 1,
+    "fields": {
+      "crop_type": "Maize",
+      "fertilizer_type": "NPK 23:21:0+4S",
+      "application_rate": "100 kg/ha at planting",
+      "timing": "At planting",
+      "notes": "Ensure soil pH is between 5.5-7.0 for optimal nutrient uptake."
+    }
+  },
+  {
+    "model": "chatbot.cropmanagementtip",
+    "pk": 1,
+    "fields": {
+      "crop_type": "Groundnuts",
+      "tip_title": "Proper Spacing for Groundnuts",
+      "tip_content": "Maintain 30-45 cm between rows and 10-15 cm between plants for optimal yield. Proper spacing reduces disease incidence and improves air circulation.",
+      "season": "rainy"
+    }
+  },
+  {
+    "model": "chatbot.extensionresource",
+    "pk": 1,
+    "fields": {
+      "title": "Malawi National Agriculture Extension Strategy 2020-2024",
+      "content": "This strategy aims to strengthen extension services through capacity building, technology adoption, and farmer empowerment. Key focus areas include climate-smart agriculture, value chain development, and digital extension tools.",
+      "resource_type": "policy",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]
