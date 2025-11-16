@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .utils import generate_combined_response
+from .utils import query_mistral_llm
 
 def chatbot_home(request):
     """
@@ -23,7 +23,7 @@ def chatbot_api(request):
             if not question:
                 return JsonResponse({'error': 'Question is required.'}, status=400)
 
-            response = generate_combined_response(question)
+            response = query_mistral_llm(question)
             return JsonResponse({'response': response})
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON.'}, status=400)

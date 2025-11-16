@@ -21,6 +21,15 @@ def query_mistral_llm(question):
         chat_completion = client.chat.completions.create(
             messages=[
                 {
+                    "role": "system",
+                    "content": (
+                        "You are AgriAssist an agriculture extension assistant chatbot , developed by Asante Mbaya "
+                        "Provide accurate, verified, and Malawi-relevant farming information. "
+                        "Explain concepts simply, avoid hallucinations, and only answer non-agricultural "
+                        "questions if absolutely necessary."
+                    )
+                },
+                {
                     "role": "user",
                     "content": question,
                 }
@@ -33,62 +42,63 @@ def query_mistral_llm(question):
     except Exception as e:
         return f"Error querying LLM: {str(e)}"
 
+
 def search_agricultural_data(question):
     """
     Searches the local database for relevant agricultural information.
-    This is a simple keyword-based search. In production, consider using full-text search.
+    Simple keyword search. For production, use full-text search.
     """
-    from .models import AgriculturalFAQ, PestInfo, FertilizerGuideline, CropManagementTip, ExtensionResource
+    from .models import (
+        AgriculturalFAQ,
+        PestInfo,
+        FertilizerGuideline,
+        CropManagementTip,
+        ExtensionResource,
+    )
 
     keywords = question.lower().split()
     results = []
 
     # Search FAQs
     faqs = AgriculturalFAQ.objects.filter(
-        models.Q(question__icontains=keywords[0]) | models.Q(answer__icontains=keywords[0])
+        models.Q(question__icontains=keywords[0]) |
+        models.Q(answer__icontains=keywords[0])
     )
     for faq in faqs:
         results.append(faq.answer)
 
     # Search Pest Info
     pests = PestInfo.objects.filter(
-        models.Q(name__icontains=keywords[0]) | models.Q(description__icontains=keywords[0])
+        models.Q(name__icontains=keywords[0]) |
+        models.Q(description__icontains=keywords[0])
     )
     for pest in pests:
         results.append(f"{pest.name}: {pest.symptoms}. Treatment: {pest.treatment}")
 
     # Search Fertilizer Guidelines
     fertilizers = FertilizerGuideline.objects.filter(
-        models.Q(crop_type__icontains=keywords[0]) | models.Q(fertilizer_type__icontains=keywords[0])
+        models.Q(crop_type__icontains=keywords[0]) |
+        models.Q(fertilizer_type__icontains=keywords[0])
     )
     for fert in fertilizers:
-        results.append(f"For {fert.crop_type}: Use {fert.fertilizer_type} at {fert.application_rate}")
+        results.append(
+            f"For {fert.crop_type}: Use {fert.fertilizer_type} at {fert.application_rate}"
+        )
 
     # Search Crop Tips
     tips = CropManagementTip.objects.filter(
-        models.Q(crop_type__icontains=keywords[0]) | models.Q(tip_content__icontains=keywords[0])
+        models.Q(crop_type__icontains=keywords[0]) |
+        models.Q(tip_content__icontains=keywords[0])
     )
     for tip in tips:
         results.append(f"{tip.tip_title}: {tip.tip_content}")
 
-    # Search Resources
+    # Search Extension Resources
     resources = ExtensionResource.objects.filter(
-        models.Q(title__icontains=keywords[0]) | models.Q(content__icontains=keywords[0])
+        models.Q(title__icontains=keywords[0]) |
+        models.Q(content__icontains=keywords[0])
     )
     for res in resources:
         results.append(f"{res.title}: {res.content[:200]}...")
 
-    return results[:5]  # Limit to top 5 results
-
-def generate_combined_response(question):
-    """
-    Returns local database results if available, otherwise LLM response.
-    """
-    local_results = search_agricultural_data(question)
-
-    if local_results:
-        # Return local results if found
-        return "\n\n".join(local_results)
-    else:
-        # Return LLM response for other queries
-        return query_mistral_llm(question)
+    return results[:5]  # still safe, you can change to [:1] if needed
