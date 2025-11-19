@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 import json
-from .utils import query_mistral_llm, fetch_api_data, format_api_data_for_context
+from .utils import query_mistral_llm, fetch_api_data, format_api_data_for_context, search_agricultural_data
 from .models import ChatSession, ChatMessage, UserProfile
 
 def signup(request):
@@ -134,14 +134,63 @@ def chatbot_api(request):
         if not question:
             return JsonResponse({'error': 'Question is required.'}, status=400)
 
-        # Get or create chat session
+        # Get or create chat session. If a session_id is provided but doesn't
+        # belong to the current user, avoid raising a hard 404: if the session
+        # exists and the requester is an admin, allow viewing it; otherwise
+        # create a fresh session for the current user so the chat continues.
+        session = None
         if session_id:
             try:
                 session = ChatSession.objects.get(id=session_id, user=request.user)
             except ChatSession.DoesNotExist:
-                return JsonResponse({'error': 'Chat session not found.'}, status=404)
+                # See if the session exists but belongs to someone else
+                other = ChatSession.objects.filter(id=session_id).first()
+                if other:
+                    # If requester is staff/superuser, allow using that session
+                    if request.user.is_staff or request.user.is_superuser:
+                        session = other
+                    else:
+                        # For regular users, create a new session instead
+                        session = ChatSession.objects.create(user=request.user)
+                else:
+                    # No such session at all, create a new one for this user
+                    session = ChatSession.objects.create(user=request.user)
         else:
             session = ChatSession.objects.create(user=request.user)
+
+        # If the question matches a local FAQ or other DB content, prefer the
+        # stored answer so users get the pre-installed authoritative response.
+        faq_results = []
+        try:
+            faq_results = search_agricultural_data(question)
+        except Exception:
+            faq_results = []
+
+        if faq_results:
+            # Use the first matching result as the authoritative answer.
+            faq_answer = faq_results[0]
+
+            # Ensure a session exists for storage
+            if not session:
+                session = ChatSession.objects.create(user=request.user)
+
+            message = ChatMessage.objects.create(
+                session=session,
+                user_message=question,
+                bot_response=faq_answer,
+            )
+
+            # Update session title if it's the first message
+            if session.messages.count() == 1:
+                session.title = question[:100]
+                session.save()
+
+            return JsonResponse({
+                'response': faq_answer,
+                'session_id': session.id,
+                'message_id': message.id,
+                'source': 'faq',
+            })
 
         # Fetch data from agricultural APIs
         api_data = fetch_api_data()
@@ -219,9 +268,22 @@ def get_session_messages(request, session_id):
     Retrieves all messages from a specific chat session.
     """
     try:
-        session = ChatSession.objects.get(id=session_id, user=request.user)
+        # Try to get the session for this user. If not found, allow admins to
+        # view other users' sessions; otherwise create a new empty session so
+        # the client doesn't receive a hard 404 (helps when a session id is
+        # stale on the client).
+        try:
+            session = ChatSession.objects.get(id=session_id, user=request.user)
+        except ChatSession.DoesNotExist:
+            other = ChatSession.objects.filter(id=session_id).first()
+            if other and (request.user.is_staff or request.user.is_superuser):
+                session = other
+            else:
+                # Create an empty session for the user instead of failing.
+                session = ChatSession.objects.create(user=request.user)
+
         messages = session.messages.all()
-        
+
         message_list = [
             {
                 'id': msg.id,
@@ -231,7 +293,7 @@ def get_session_messages(request, session_id):
             }
             for msg in messages
         ]
-        
+
         return JsonResponse({
             'session_id': session.id,
             'title': session.title,
