@@ -159,7 +159,8 @@ def query_mistral_llm(question: str, api_context: str = "", username: str = None
 def search_agricultural_data(question: str) -> List[str]:
     """
     Searches the local database for relevant agricultural information.
-    Simple keyword search. For production, use full-text search.
+    Searches all keywords in the question, not just the first one.
+    For production, use full-text search or embeddings-based retrieval.
     """
     from .models import (
         AgriculturalFAQ,
@@ -175,45 +176,44 @@ def search_agricultural_data(question: str) -> List[str]:
     if not keywords:
         return results
 
-    # Search FAQs
-    faqs = AgriculturalFAQ.objects.filter(
-        models.Q(question__icontains=keywords[0]) |
-        models.Q(answer__icontains=keywords[0])
-    )
+    # Build query to match any keyword in question or answer
+    query = models.Q()
+    for keyword in keywords:
+        query |= models.Q(question__icontains=keyword) | models.Q(answer__icontains=keyword)
+
+    # Search FAQs with all keywords, not just the first
+    faqs = AgriculturalFAQ.objects.filter(query)
     for faq in faqs:
         results.append(faq.answer)
 
-    # Search Pest Info
-    pests = PestInfo.objects.filter(
-        models.Q(name__icontains=keywords[0]) |
-        models.Q(description__icontains=keywords[0])
-    )
+    # Search Pest Info with all keywords
+    pests = PestInfo.objects.filter(query)
     for pest in pests:
         results.append(f"{pest.name}: {pest.symptoms}. Treatment: {pest.treatment}")
 
-    # Search Fertilizer Guidelines
-    fertilizers = FertilizerGuideline.objects.filter(
-        models.Q(crop_type__icontains=keywords[0]) |
-        models.Q(fertilizer_type__icontains=keywords[0])
-    )
+    # Search Fertilizer Guidelines with all keywords
+    fertilizer_query = models.Q()
+    for keyword in keywords:
+        fertilizer_query |= models.Q(crop_type__icontains=keyword) | models.Q(fertilizer_type__icontains=keyword)
+    fertilizers = FertilizerGuideline.objects.filter(fertilizer_query)
     for fert in fertilizers:
         results.append(
             f"For {fert.crop_type}: Use {fert.fertilizer_type} at {fert.application_rate}"
         )
 
-    # Search Crop Tips
-    tips = CropManagementTip.objects.filter(
-        models.Q(crop_type__icontains=keywords[0]) |
-        models.Q(tip_content__icontains=keywords[0])
-    )
+    # Search Crop Tips with all keywords
+    tip_query = models.Q()
+    for keyword in keywords:
+        tip_query |= models.Q(crop_type__icontains=keyword) | models.Q(tip_content__icontains=keyword)
+    tips = CropManagementTip.objects.filter(tip_query)
     for tip in tips:
         results.append(f"{tip.tip_title}: {tip.tip_content}")
 
-    # Search Extension Resources
-    resources = ExtensionResource.objects.filter(
-        models.Q(title__icontains=keywords[0]) |
-        models.Q(content__icontains=keywords[0])
-    )
+    # Search Extension Resources with all keywords
+    resource_query = models.Q()
+    for keyword in keywords:
+        resource_query |= models.Q(title__icontains=keyword) | models.Q(content__icontains=keyword)
+    resources = ExtensionResource.objects.filter(resource_query)
     for res in resources:
         results.append(f"{res.title}: {res.content[:200]}...")
 

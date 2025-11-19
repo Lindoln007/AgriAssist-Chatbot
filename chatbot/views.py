@@ -21,7 +21,7 @@ def signup(request):
             password = data.get('password', '').strip()
             location = data.get('location', '').strip()
             specialization = data.get('specialization', '').strip()
-            display_name = data.get('display_name', '').strip()
+            display_name = data.get('display_name', '').strip() or None
 
             # Validation
             if not username or not email or not password:
@@ -134,28 +134,23 @@ def chatbot_api(request):
         if not question:
             return JsonResponse({'error': 'Question is required.'}, status=400)
 
-        # Get or create chat session. If a session_id is provided but doesn't
-        # belong to the current user, avoid raising a hard 404: if the session
-        # exists and the requester is an admin, allow viewing it; otherwise
-        # create a fresh session for the current user so the chat continues.
+        # Get or create chat session. Enforce strict ownership: only the session
+        # owner (or admin for viewing) can use a session. Regular users cannot use
+        # sessions they don't own; a new session is created for them instead.
         session = None
         if session_id:
             try:
                 session = ChatSession.objects.get(id=session_id, user=request.user)
             except ChatSession.DoesNotExist:
-                # See if the session exists but belongs to someone else
+                # See if session exists but belongs to someone else
                 other = ChatSession.objects.filter(id=session_id).first()
-                if other:
-                    # If requester is staff/superuser, allow using that session
-                    if request.user.is_staff or request.user.is_superuser:
-                        session = other
-                    else:
-                        # For regular users, create a new session instead
-                        session = ChatSession.objects.create(user=request.user)
+                if other and (request.user.is_staff or request.user.is_superuser):
+                    # Admin can view/use other users' sessions for admin workflows
+                    session = other
                 else:
-                    # No such session at all, create a new one for this user
+                    # Regular users must have their own session; create a new one
                     session = ChatSession.objects.create(user=request.user)
-        else:
+        if not session:
             session = ChatSession.objects.create(user=request.user)
 
         # If the question matches a local FAQ or other DB content, prefer the
@@ -170,18 +165,14 @@ def chatbot_api(request):
             # Use the first matching result as the authoritative answer.
             faq_answer = faq_results[0]
 
-            # Ensure a session exists for storage
-            if not session:
-                session = ChatSession.objects.create(user=request.user)
-
             message = ChatMessage.objects.create(
                 session=session,
                 user_message=question,
                 bot_response=faq_answer,
             )
 
-            # Update session title if it's the first message
-            if session.messages.count() == 1:
+            # Update session title only if no title is set (first message)
+            if not session.title:
                 session.title = question[:100]
                 session.save()
 
@@ -224,11 +215,16 @@ def chatbot_api(request):
 
         # Prefer the UserProfile.display_name if set, then the user's full name,
         # then fall back to the username so the bot uses the preferred name.
+        owner_display_name = None
         try:
             owner_profile, _ = UserProfile.objects.get_or_create(user=owner)
-            owner_display_name = owner_profile.display_name or owner.get_full_name() or owner.username
+            owner_display_name = owner_profile.display_name
         except Exception:
-            owner_display_name = owner.get_full_name() or owner.username
+            pass
+        if not owner_display_name:
+            owner_display_name = owner.get_full_name()
+        if not owner_display_name:
+            owner_display_name = owner.username
 
         # Query LLM with API context, the session owner's display name and
         # conversation history so replies address the correct person.
@@ -246,8 +242,8 @@ def chatbot_api(request):
             bot_response=response
         )
 
-        # Update session title if it's the first message
-        if session.messages.count() == 1:
+        # Update session title only if no title is set (first message)
+        if not session.title:
             session.title = question[:100]
             session.save()
 
@@ -268,19 +264,18 @@ def get_session_messages(request, session_id):
     Retrieves all messages from a specific chat session.
     """
     try:
-        # Try to get the session for this user. If not found, allow admins to
-        # view other users' sessions; otherwise create a new empty session so
-        # the client doesn't receive a hard 404 (helps when a session id is
-        # stale on the client).
+        # Enforce strict ownership: only the session owner (or admin) can view.
+        # If regular user requests a session they don't own, return 404.
         try:
             session = ChatSession.objects.get(id=session_id, user=request.user)
         except ChatSession.DoesNotExist:
             other = ChatSession.objects.filter(id=session_id).first()
             if other and (request.user.is_staff or request.user.is_superuser):
+                # Admin can view other users' sessions
                 session = other
             else:
-                # Create an empty session for the user instead of failing.
-                session = ChatSession.objects.create(user=request.user)
+                # Regular users cannot access sessions they don't own
+                return JsonResponse({'error': 'Chat session not found.'}, status=404)
 
         messages = session.messages.all()
 
