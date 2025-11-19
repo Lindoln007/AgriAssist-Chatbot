@@ -1,4 +1,42 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+class UserProfile(models.Model):
+    """Extended user profile for tracking agricultural extension officers"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    location = models.CharField(max_length=200, blank=True, null=True)
+    specialization = models.CharField(max_length=200, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
+
+class ChatSession(models.Model):
+    """Stores chat sessions and conversations for users"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_sessions')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    title = models.CharField(max_length=300, blank=True, null=True)
+
+    class Meta:
+        ordering = ['-updated_at']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.created_at}"
+
+class ChatMessage(models.Model):
+    """Individual messages within a chat session"""
+    session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='messages')
+    user_message = models.TextField()
+    bot_response = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Message in {self.session}"
 
 class AgriculturalFAQ(models.Model):
     question = models.CharField(max_length=500)
