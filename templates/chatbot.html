@@ -261,8 +261,11 @@
 
         <div class="user-info">
             <p><strong>{{ user.username }}</strong></p>
-            {% if user.profile.specialization %}
-                <p>{{ user.profile.specialization }}</p>
+            {% if user_profile and user_profile.specialization %}
+                <p>{{ user_profile.specialization }}</p>
+            {% endif %}
+            {% if is_admin %}
+                <p style="font-size:12px;color:#666;">Admin account</p>
             {% endif %}
             <a href="{% url 'chatbot:logout' %}" class="logout-btn">Logout</a>
         </div>
@@ -415,13 +418,15 @@
             sessions.forEach(session => {
                 const sessionEl = document.createElement('div');
                 sessionEl.className = `session-item ${session.id === currentSessionId ? 'active' : ''}`;
-                
+                // mark DOM node with the session id so we can find it later
+                sessionEl.dataset.sessionId = session.id;
+
                 const titleEl = document.createElement('span');
                 titleEl.textContent = session.title;
                 titleEl.style.cursor = 'pointer';
                 titleEl.style.flex = '1';
                 titleEl.onclick = () => loadSessionMessages(session.id);
-                
+
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'session-delete';
                 deleteBtn.textContent = '✕';
@@ -429,7 +434,7 @@
                     e.stopPropagation();
                     deleteSession(session.id);
                 };
-                
+
                 sessionEl.appendChild(titleEl);
                 sessionEl.appendChild(deleteBtn);
                 chatSessionsDiv.appendChild(sessionEl);
@@ -446,10 +451,9 @@
                     chatMessages.innerHTML = '';
                     
                     // Update active session in sidebar
-                    document.querySelectorAll('.session-item').forEach(el => {
-                        el.classList.remove('active');
-                    });
-                    event.target.closest('.session-item').classList.add('active');
+                    document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
+                    const activeEl = document.querySelector(`[data-session-id="${sessionId}"]`);
+                    if (activeEl) activeEl.classList.add('active');
                     
                     // Load all messages from this session
                     data.messages.forEach(msg => {

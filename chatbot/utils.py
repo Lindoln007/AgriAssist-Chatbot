@@ -91,7 +91,7 @@ def format_api_data_for_context(api_data: Dict[str, any]) -> str:
     
     return context
 
-def query_mistral_llm(question: str, api_context: str = "", username: str = None) -> str:
+def query_mistral_llm(question: str, api_context: str = "", username: str = None, conversation: List[Dict[str, str]] = None) -> str:
     """
     Queries the Groq LLM API using Llama 3.1 8B model.
     Includes context from agricultural data APIs.
@@ -117,18 +117,36 @@ def query_mistral_llm(question: str, api_context: str = "", username: str = None
         
         if api_context:
             system_message += f"\n\n{api_context}"
-        
+
+        # Build the message list for the chat completion. Start with system message.
+        messages = [
+            {"role": "system", "content": system_message}
+        ]
+
+        # If conversation history is provided, append prior user/assistant turns.
+        # `conversation` is expected to be a list of dicts with keys like
+        # {'user_message': '...', 'bot_response': '...'} or already in
+        # {'role': 'user'|'assistant', 'content': '...'} form.
+        if conversation:
+            for entry in conversation:
+                # If entry already looks like a chat message dict, use it.
+                if 'role' in entry and 'content' in entry:
+                    messages.append({'role': entry['role'], 'content': entry['content']})
+                    continue
+
+                # Otherwise, expect user_message and bot_response fields.
+                user_msg = entry.get('user_message')
+                bot_msg = entry.get('bot_response')
+                if user_msg:
+                    messages.append({'role': 'user', 'content': user_msg})
+                if bot_msg:
+                    messages.append({'role': 'assistant', 'content': bot_msg})
+
+        # Append the current user question as the latest user message.
+        messages.append({'role': 'user', 'content': question})
+
         chat_completion = client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system",
-                    "content": system_message
-                },
-                {
-                    "role": "user",
-                    "content": question,
-                }
-            ],
+            messages=messages,
             model="llama-3.1-8b-instant",
             temperature=0.7,
             max_tokens=500,

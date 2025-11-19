@@ -177,6 +177,11 @@
             </div>
 
             <div class="form-group">
+                <label for="display_name">Display name (Optional)</label>
+                <input type="text" id="display_name" name="display_name" placeholder="How you'd like to be addressed">
+            </div>
+
+            <div class="form-group">
                 <label for="specialization">Specialization (Optional)</label>
                 <input type="text" id="specialization" name="specialization" placeholder="e.g., Crop Management">
             </div>
@@ -209,6 +214,7 @@
                 password: document.getElementById('password').value,
                 location: document.getElementById('location').value.trim(),
                 specialization: document.getElementById('specialization').value.trim(),
+                display_name: document.getElementById('display_name').value.trim(),
             };
 
             try {

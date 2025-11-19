@@ -21,6 +21,7 @@ def signup(request):
             password = data.get('password', '').strip()
             location = data.get('location', '').strip()
             specialization = data.get('specialization', '').strip()
+            display_name = data.get('display_name', '').strip()
 
             # Validation
             if not username or not email or not password:
@@ -42,6 +43,7 @@ def signup(request):
             # Create user profile
             UserProfile.objects.create(
                 user=user,
+                display_name=display_name,
                 location=location,
                 specialization=specialization
             )
@@ -99,12 +101,20 @@ def chatbot_home(request):
     Renders the chatbot interface.
     Only accessible to logged-in users.
     """
-    user_profile = request.user.profile
+    # Ensure a UserProfile exists for the logged-in user (superusers created via
+    # createsuperuser may not have a profile). This prevents RelatedObjectDoesNotExist
+    # exceptions when templates or code expect `user.profile`.
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    # Keep sessions strictly scoped to the authenticated user. If the user is an
+    # admin, mark that in the context so templates can treat admin accounts
+    # differently if desired — but do not merge admin data with regular users.
     chat_sessions = ChatSession.objects.filter(user=request.user)
-    
+
     context = {
         'user_profile': user_profile,
         'chat_sessions': chat_sessions,
+        'is_admin': request.user.is_staff or request.user.is_superuser,
     }
     return render(request, 'chatbot.html', context)
 
@@ -137,8 +147,48 @@ def chatbot_api(request):
         api_data = fetch_api_data()
         api_context = format_api_data_for_context(api_data)
 
-        # Query LLM with API context and user's name
-        response = query_mistral_llm(question, api_context, username=request.user.username)
+        # Build conversation history from previous messages in this session
+        # and pass it to the LLM so it can maintain conversational state.
+        conversation_history = []
+        try:
+            # Only include a recent slice to avoid overly long prompts
+            recent_msgs = session.messages.order_by('created_at').all()
+            # keep last 10 message pairs (user+bot)
+            if recent_msgs.exists():
+                # Convert to list and take the last N
+                msgs_list = list(recent_msgs)[-10:]
+                for msg in msgs_list:
+                    conversation_history.append({
+                        'user_message': msg.user_message,
+                        'bot_response': msg.bot_response,
+                    })
+        except Exception:
+            conversation_history = []
+
+        # Determine which user name should be presented to the LLM. Use the
+        # session owner (session.user) rather than the currently logged-in user
+        # so admins viewing sessions do not cause the bot to address the admin.
+        try:
+            owner = session.user
+        except Exception:
+            owner = request.user
+
+        # Prefer the UserProfile.display_name if set, then the user's full name,
+        # then fall back to the username so the bot uses the preferred name.
+        try:
+            owner_profile, _ = UserProfile.objects.get_or_create(user=owner)
+            owner_display_name = owner_profile.display_name or owner.get_full_name() or owner.username
+        except Exception:
+            owner_display_name = owner.get_full_name() or owner.username
+
+        # Query LLM with API context, the session owner's display name and
+        # conversation history so replies address the correct person.
+        response = query_mistral_llm(
+            question,
+            api_context,
+            username=owner_display_name,
+            conversation=conversation_history,
+        )
 
         # Store message in database
         message = ChatMessage.objects.create(
