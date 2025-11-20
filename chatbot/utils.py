@@ -1,6 +1,7 @@
 import os
 from groq import Groq
 from django.conf import settings
+from django.core.cache import cache
 from django.db import models
 from dotenv import load_dotenv
 import requests
@@ -28,6 +29,12 @@ def fetch_api_data(timeout: int = None) -> Dict[str, any]:
     if timeout is None:
         timeout = getattr(settings, 'API_TIMEOUT', 30)
     
+    # Try to return cached API results to avoid repeated network calls.
+    cache_key = 'agri_api_data'
+    cached = cache.get(cache_key)
+    if cached:
+        return cached
+
     api_data = {}
     
     for endpoint in API_ENDPOINTS:
@@ -68,6 +75,8 @@ def fetch_api_data(timeout: int = None) -> Dict[str, any]:
             }
     
     return api_data
+
+    # Note: unreachable - kept for clarity
 
 def format_api_data_for_context(api_data: Dict[str, any]) -> str:
     """

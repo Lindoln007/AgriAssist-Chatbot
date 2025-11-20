@@ -141,4 +141,6 @@ LOGIN_REDIRECT_URL = 'chatbot:home'
 
 # API Timeout
 API_TIMEOUT = 30  # seconds
+# Cache timeout for agricultural API responses (in seconds). Default: 10 minutes
+API_CACHE_TIMEOUT = 600
 
