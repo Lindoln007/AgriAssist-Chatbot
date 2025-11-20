@@ -23,6 +23,11 @@ def home_redirect(request):
 
 urlpatterns = [
     path('', home_redirect, name='home'),
+    # Redirect stale analytics admin URLs (removed) back to the chatbot app admin list
+    path('admin/chatbot/useranalytics/', lambda req: redirect('/admin/chatbot/')),
+    path('admin/chatbot/systemanalytics/', lambda req: redirect('/admin/chatbot/')),
+    path('admin/chatbot/apicalllog/', lambda req: redirect('/admin/chatbot/')),
+    path('admin/chatbot/activitylog/', lambda req: redirect('/admin/chatbot/')),
     path('admin/', admin.site.urls),
     path('chatbot/', include('chatbot.urls')),
 ]
