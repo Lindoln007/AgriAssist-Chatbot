@@ -13,33 +13,31 @@ User (e.g., "john_farmer")
     Group: "Admin" (can manage users, delete content)
 ```
 
-## Step 1: Create Groups in Django Admin
+## Step 3: Create Groups in Django Admin
 
 1. Go to `http://localhost:8000/admin/`
 2. Navigate to **Authentication and Authorization** > **Groups**
-3. Click **Add Group**
-4. Create these groups:
-   - `Farmers` - Basic users
-   - `Extension Officers` - Power users
-   - `Admins` - Full access
+3. Click **+ Add Group**
+4. Type group name: `Farmers` and click **Save**
+5. Click **+ Add Group** again, type: `Extension Officers` and click **Save**
+6. Repeat for: `Admins`
 
-## Step 2: Assign Permissions to Groups
+**That's it! You now have 3 groups. Skip the permissions section below if you're a beginner.**
 
-For each group, select relevant permissions:
+## Step 2: Assign Permissions to Groups (Optional - Keep Simple!)
+
+**For beginners, just create the groups and skip permissions.** The code doesn't use them yet anyway.
+
+If you want to assign permissions later, keep it simple:
 
 ### Farmers Group
-- `chatbot.view_chatsession` - View own sessions
-- `chatbot.add_chatmessage` - Send messages
-- `chatbot.view_chatmessage` - View own messages
+- (No permissions needed - they can just chat)
 
 ### Extension Officers Group
-- `chatbot.view_chatsession` - View all sessions
-- `chatbot.view_chatmessage` - View all messages
-- `chatbot.change_agriculturalFaq` - Edit FAQs
-- `chatbot.add_agriculturalFaq` - Add FAQs
+- (No permissions needed - they can manage content via admin)
 
 ### Admins Group
-- All permissions
+- (Already has all permissions as superuser)
 
 ## Step 3: Add Groups to Users
 
