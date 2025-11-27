@@ -6,7 +6,10 @@ app_name = 'chatbot'
 urlpatterns = [
     # Authentication URLs
     path('signup/', views.signup, name='signup'),
-    path('signin/', views.signin, name='login'),
+    path('login/', views.login_selection, name='login_selection'),
+    path('login/user/', views.user_login, name='user_login'),
+    path('login/admin/', views.admin_login, name='admin_login'),
+    path('signin/', views.login_selection, name='login'),
     path('logout/', views.signout, name='logout'),
     
     # Chatbot URLs

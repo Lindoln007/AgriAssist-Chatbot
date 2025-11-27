@@ -1,10 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - AgriAssist</title>
+    <title>{{ page_title|default:"Sign In - AgriAssist" }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #2F855A;
+            --primary-dark: #22543D;
+            --primary-light: #48BB78;
+            --accent: #F6E05E;
+            --bg-color: #FDFBF7;
+            --text-main: #2D3748;
+            --text-light: #A0AEC0;
+            --white: #FFFFFF;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,83 +29,151 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#2F855A 0.5px, transparent 0.5px), radial-gradient(#2F855A 0.5px, var(--bg-color) 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: var(--text-main);
         }
 
         .container {
             width: 100%;
-            max-width: 400px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            padding: 40px;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 15px -3px rgba(47, 133, 90, 0.3);
+            transform: rotate(-5deg);
         }
 
         .logo h1 {
-            color: #667eea;
+            color: var(--primary-dark);
             font-size: 28px;
-            margin-bottom: 5px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
 
         .logo p {
-            color: #666;
-            font-size: 14px;
+            color: var(--text-light);
+            font-size: 15px;
+            font-weight: 400;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            position: relative;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: var(--text-main);
             font-weight: 500;
             font-size: 14px;
+            margin-left: 4px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            transition: color 0.3s;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
+            padding: 14px 16px 14px 44px;
+            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: #F8FAFC;
+            font-family: inherit;
+            color: var(--text-main);
         }
 
         input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(47, 133, 90, 0.1);
+        }
+
+        input:focus+i {
+            color: var(--primary);
         }
 
         .submit-btn {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px;
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 16px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px -1px rgba(47, 133, 90, 0.2);
         }
 
         .submit-btn:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 15px -3px rgba(47, 133, 90, 0.3);
         }
 
         .submit-btn:active {
@@ -96,82 +181,124 @@
         }
 
         .error-message {
-            background-color: #fee;
-            color: #c33;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            background-color: #FFF5F5;
+            color: #C53030;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
             display: none;
-            border-left: 4px solid #c33;
+            border: 1px solid #FED7D7;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .link {
             text-align: center;
-            margin-top: 20px;
-            color: #666;
+            margin-top: 32px;
+            color: var(--text-light);
             font-size: 14px;
         }
 
         .link a {
-            color: #667eea;
+            color: var(--primary);
             text-decoration: none;
             font-weight: 600;
+            transition: color 0.2s;
         }
 
         .link a:hover {
+            color: var(--primary-dark);
             text-decoration: underline;
         }
 
         .loading {
             display: none;
             text-align: center;
-            color: #667eea;
+            color: var(--primary);
             font-size: 14px;
-            margin-top: 10px;
+            margin-top: 16px;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
+        <a href="{% url 'chatbot:login_selection' %}" class="back-link"><i class="fas fa-arrow-left"></i> Back to
+            selection</a>
+
         <div class="logo">
-            <h1>AgriAssist</h1>
-            <p>Agricultural Extension Support</p>
+            <div class="logo-icon">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <h1>{{ header_title|default:"AgriAssist" }}</h1>
+            <p>{{ welcome_text|default:"Welcome back! Please sign in to continue." }}</p>
         </div>
 
-        <h2 style="text-align: center; margin-bottom: 30px; color: #333; font-size: 22px;">Sign In</h2>
-
-        <div class="error-message" id="error-message"></div>
+        <div class="error-message" id="error-message" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="error-text"></span>
+        </div>
 
         <form id="login-form">
             {% csrf_token %}
-            
+
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required autofocus>
+                <div class="input-wrapper">
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required
+                        autofocus>
+                    <i class="fas fa-user"></i>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <div class="input-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <i class="fas fa-lock"></i>
+                </div>
             </div>
 
-            <button type="submit" class="submit-btn">Sign In</button>
-            <div class="loading" id="loading">Signing in...</div>
+            <button type="submit" class="submit-btn">
+                Sign In <i class="fas fa-arrow-right"></i>
+            </button>
+            <div class="loading" id="loading">
+                <i class="fas fa-circle-notch fa-spin"></i> Signing in...
+            </div>
         </form>
 
+        {% if show_signup_link %}
         <div class="link">
-            Don't have an account? <a href="{% url 'chatbot:signup' %}">Create One</a>
+            Don't have an account? <a href="{% url 'chatbot:signup' %}">Create Account</a>
         </div>
+        {% endif %}
     </div>
 
     <script>
         const form = document.getElementById('login-form');
         const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
         const loadingDiv = document.getElementById('loading');
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             errorMessage.style.display = 'none';
             loadingDiv.style.display = 'block';
 
@@ -181,7 +308,7 @@
             };
 
             try {
-                const response = await fetch('{% url "chatbot:login" %}', {
+                const response = await fetch('{{ submit_url }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -193,18 +320,19 @@
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    window.location.href = '{% url "chatbot:home" %}';
+                    window.location.href = data.redirect_url || '{% url "chatbot:home" %}';
                 } else {
-                    errorMessage.textContent = data.error || 'An error occurred';
-                    errorMessage.style.display = 'block';
+                    errorText.textContent = data.error || 'Invalid username or password';
+                    errorMessage.style.display = 'flex';
                 }
             } catch (error) {
-                errorMessage.textContent = 'Network error. Please try again.';
-                errorMessage.style.display = 'block';
+                errorText.textContent = 'Network error. Please try again.';
+                errorMessage.style.display = 'flex';
             } finally {
                 loadingDiv.style.display = 'none';
             }
         });
     </script>
 </body>
+
 </html>

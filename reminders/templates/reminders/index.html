@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Calendar - AgriAssist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <style>
+        :root {
+            --primary: #2F855A;
+            --primary-dark: #22543D;
+            --primary-light: #48BB78;
+            --accent: #F6E05E;
+            --bg-color: #FDFBF7;
+            --sidebar-bg: #1C4532;
+            --text-main: #2D3748;
+            --text-light: #A0AEC0;
+            --white: #FFFFFF;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --glass: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(0, 0, 0, 0.05);
+            --card-bg: #FFFFFF;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1A202C;
+            --sidebar-bg: #171923;
+            --text-main: #F7FAFC;
+            --text-light: #A0AEC0;
+            --white: #2D3748;
+            --glass: rgba(26, 32, 44, 0.95);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --card-bg: #2D3748;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            height: 100vh;
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Sidebar (Simplified from chatbot) */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 40px;
+        }
+
+        /* Dashboard Highlight */
+        .highlight-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(47, 133, 90, 0.3);
+        }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            height: calc(100vh - 200px);
+        }
+
+        /* Forms & Lists */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Reminder List */
+        .reminder-list {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .reminder-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reminder-item:last-child {
+            border-bottom: none;
+        }
+
+        .reminder-info h4 {
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .reminder-info p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .status-pending {
+            background: #FEFCBF;
+            color: #744210;
+        }
+
+        .status-completed {
+            background: #C6F6D5;
+            color: #22543D;
+        }
+
+        /* Calendar Overrides */
+        #calendar {
+            height: 100%;
+        }
+
+        .fc {
+            color: var(--text-main);
+        }
+
+        .fc-button-primary {
+            background-color: var(--primary) !important;
+            border-color: var(--primary) !important;
+        }
+
+        .fc-daygrid-day-number {
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .fc-col-header-cell-cushion {
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        [data-theme="dark"] .fc-theme-standard td,
+        [data-theme="dark"] .fc-theme-standard th {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 1024px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            #calendar {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a href="{% url 'chatbot:home' %}" style="text-decoration:none; color:inherit;">
+                <h2><i class="fas fa-leaf"></i> AgriAssist</h2>
+            </a>
+        </div>
+        <nav>
+            <a href="{% url 'chatbot:home' %}" class="nav-link">
+                <i class="fas fa-comments"></i> Chatbot
+            </a>
+            <a href="{% url 'reminders:index' %}" class="nav-link active">
+                <i class="fas fa-calendar-alt"></i> Calendar & Reminders
+            </a>
+            <a href="{% url 'policy_updates:user_list' %}" class="nav-link">
+                <i class="fas fa-landmark"></i> Government Updates
+            </a>
+            {% if user.is_staff %}
+            <a href="/admin/" class="nav-link">
+                <i class="fas fa-shield-alt"></i> Admin Panel
+            </a>
+            {% endif %}
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Farm Calendar</h1>
+            <button id="theme-toggle-btn" class="btn"
+                style="background:transparent; color:var(--text-main); border:1px solid var(--border-color);">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <div class="content-scroll">
+            {% if due_today_count > 0 %}
+            <div class="highlight-card">
+                <div>
+                    <h3><i class="fas fa-bell"></i> Attention Needed</h3>
+                    <p>You have <strong>{{ due_today_count }}</strong> reminder(s) due today!</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="grid-container">
+                <!-- Left Column: Add Form & List -->
+                <div style="display:flex; flex-direction:column; gap:30px;">
+                    <div class="card">
+                        <h3 style="margin-bottom:20px;">Add Reminder</h3>
+                        <form action="{% url 'reminders:add' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Activity Type</label>
+                                <select name="activity_type" class="form-control" required>
+                                    <option value="Planting">Planting</option>
+                                    <option value="Weeding">Weeding</option>
+                                    <option value="Fertilizing">Fertilizing</option>
+                                    <option value="Irrigation">Irrigation</option>
+                                    <option value="Harvesting">Harvesting</option>
+                                    <option value="Vaccination">Vaccination</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Crop / Livestock</label>
+                                <input type="text" name="crop_or_livestock" class="form-control"
+                                    placeholder="e.g. Maize, Cows" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="date" name="date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Time</label>
+                                <input type="time" name="time" class="form-control" value="08:00" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea name="notes" class="form-control" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Reminder</button>
+                        </form>
+                    </div>
+
+                    <div class="card" style="flex:1;">
+                        <h3 style="margin-bottom:15px;">Upcoming Reminders</h3>
+                        <div class="reminder-list">
+                            {% for reminder in reminders %}
+                            {% if reminder.status == 'pending' %}
+                            <div class="reminder-item">
+                                <div class="reminder-info">
+                                    <h4>{{ reminder.activity_type }} - {{ reminder.crop_or_livestock }}</h4>
+                                    <p><i class="far fa-calendar"></i> {{ reminder.date }} at {{ reminder.time|time:"g:i
+                                        A" }}</p>
+                                </div>
+                                <form action="{% url 'reminders:update_status' reminder.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="completed">
+                                    <button type="submit" class="btn"
+                                        style="padding:5px 10px; font-size:12px; background:#C6F6D5; color:#22543D;">
+                                        <i class="fas fa-check"></i> Done
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+                            {% empty %}
+                            <p style="text-align:center; color:var(--text-light); padding:20px;">No pending reminders.
+                            </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Calendar -->
+                <div class="card">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Logic (Copied from chatbot)
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        const savedTheme = localStorage.getItem('chatbot_theme') || 'light';
+
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('chatbot_theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('chatbot_theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+
+        // FullCalendar Init
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listMonth'
+                },
+                events: '{% url "reminders:api_events" %}',
+                eventClick: function (info) {
+                    if (confirm('Mark "' + info.event.title + '" as completed?')) {
+                        // Simple POST to update
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '/reminders/update/' + info.event.id + '/';
+
+                        const csrf = document.createElement('input');
+                        csrf.type = 'hidden';
+                        csrf.name = 'csrfmiddlewaretoken';
+                        csrf.value = '{{ csrf_token }}';
+                        form.appendChild(csrf);
+
+                        const status = document.createElement('input');
+                        status.type = 'hidden';
+                        status.name = 'status';
+                        status.value = 'completed';
+                        form.appendChild(status);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                }
+            });
+            calendar.render();
+        });
+    </script>
+</body>
+
+</html>

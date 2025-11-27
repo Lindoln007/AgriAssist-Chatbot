@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.conf import settings
+from django.conf.urls.static import static
 
 def home_redirect(request):
     return redirect('chatbot:home')
@@ -30,4 +32,10 @@ urlpatterns = [
     path('admin/chatbot/activitylog/', lambda req: redirect('/admin/chatbot/')),
     path('admin/', admin.site.urls),
     path('chatbot/', include('chatbot.urls')),
+    path('reminders/', include('reminders.urls')),
+    path('policy-updates/', include('policy_updates.urls')),
 ]
+
+# Serve media files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

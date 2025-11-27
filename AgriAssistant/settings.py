@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chatbot',
     'rest_framework',
+    'reminders',
+    'policy_updates',
 ]
 
 MIDDLEWARE = [
@@ -122,6 +125,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Media files (User uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -143,4 +150,104 @@ LOGIN_REDIRECT_URL = 'chatbot:home'
 API_TIMEOUT = 30  # seconds
 # Cache timeout for agricultural API responses (in seconds). Default: 10 minutes
 API_CACHE_TIMEOUT = 600
+
+# Email Configuration for Reminders
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@agriassist.com')
+
+
+# Jazzmin Configuration
+JAZZMIN_SETTINGS = {
+    "site_title": "AgriAssistant Admin",
+    "site_header": "AgriAssistant",
+    "site_brand": "AgriAssistant",
+    "welcome_sign": "Welcome to the AgriAssistant Admin Portal",
+    "copyright": "AgriAssistant Ltd",
+    "search_model": ["chatbot.UserProfile", "chatbot.AgriculturalFAQ"],
+    
+    # Top Menu
+    "topmenu_links": [
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Chatbot", "url": "/chatbot/", "new_window": True},
+    ],
+
+    # Side Menu Customization (Categorization)
+    "order_with_respect_to": [
+        "chatbot.ChatSession",
+        "chatbot.ChatMessage",
+        "chatbot.AgriculturalFAQ",
+        "chatbot.PestInfo",
+        "chatbot.FertilizerGuideline",
+        "chatbot.CropManagementTip",
+        "chatbot.ExtensionResource",
+        "chatbot.UserProfile",
+        "auth",
+    ],
+    
+    # Custom icons for apps/models
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        
+        "chatbot.UserProfile": "fas fa-id-card",
+        "chatbot.ChatSession": "fas fa-comments",
+        "chatbot.ChatMessage": "fas fa-comment-dots",
+        
+        "chatbot.AgriculturalFAQ": "fas fa-question-circle",
+        "chatbot.PestInfo": "fas fa-bug",
+        "chatbot.FertilizerGuideline": "fas fa-flask",
+        "chatbot.CropManagementTip": "fas fa-seedling",
+        "chatbot.ExtensionResource": "fas fa-book",
+    },
+    
+    # Render out the change view as a modal
+    "related_modal_active": False,
+
+    # Custom Menu Structure
+    "custom_links": {
+        "chatbot": [{
+            "name": "Knowledge Base", 
+            "url": "admin:app_list", 
+            "models": ["chatbot.AgriculturalFAQ", "chatbot.PestInfo", "chatbot.FertilizerGuideline", "chatbot.CropManagementTip", "chatbot.ExtensionResource"],
+            "icon": "fas fa-book-open",
+        }]
+    },
+    
+    "show_ui_builder": False,
+    
+    "custom_js": "js/admin_theme_toggle.js",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-success",
+    "accent": "accent-success",
+    "navbar": "navbar-success navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-light-success",
+    "sidebar_nav_small_text": False,
+    "theme": "flatly",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-success",
+        "secondary": "btn-outline-success",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
 

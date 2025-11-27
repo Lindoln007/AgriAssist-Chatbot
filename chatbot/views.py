@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
@@ -8,6 +9,8 @@ from django.views.decorators.http import require_POST
 import json
 from .utils import query_mistral_llm, fetch_api_data, format_api_data_for_context, search_agricultural_data
 from .models import ChatSession, ChatMessage, UserProfile
+from reminders.models import FarmReminder
+from datetime import date
 
 def signup(request):
     """
@@ -59,7 +62,17 @@ def signup(request):
     
     return render(request, 'signup.html')
 
-def signin(request):
+def login_selection(request):
+    """
+    Landing page to select between User and Admin login.
+    """
+    if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect('/admin/')
+        return redirect('chatbot:home')
+    return render(request, 'login_selection.html')
+
+def user_login(request):
     """
     User signin view.
     """
@@ -75,8 +88,12 @@ def signin(request):
             user = authenticate(request, username=username, password=password)
             
             if user is not None:
+                # Check if user is admin, if so deny access to user login
+                if user.is_staff or user.is_superuser:
+                     return JsonResponse({'error': 'Admins must use the Admin Login.'}, status=403)
+
                 login(request, user)
-                return JsonResponse({'success': True, 'message': 'Login successful!'})
+                return JsonResponse({'success': True, 'message': 'Login successful!', 'redirect_url': reverse('chatbot:home')})
             else:
                 return JsonResponse({'error': 'Invalid username or password.'}, status=401)
 
@@ -85,7 +102,53 @@ def signin(request):
         except Exception as e:
             return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
     
-    return render(request, 'login.html')
+    context = {
+        'submit_url': reverse('chatbot:user_login'),
+        'page_title': 'User Sign In - AgriAssist',
+        'header_title': 'AgriAssist',
+        'welcome_text': 'Welcome back! Please sign in to continue.',
+        'show_signup_link': True
+    }
+    return render(request, 'login.html', context)
+
+def admin_login(request):
+    """
+    Admin signin view.
+    """
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username', '').strip()
+            password = data.get('password', '').strip()
+
+            if not username or not password:
+                return JsonResponse({'error': 'Username and password are required.'}, status=400)
+
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                # Strictly authenticate only admins
+                if not (user.is_staff or user.is_superuser):
+                    return JsonResponse({'error': 'You do not have admin privileges.'}, status=403)
+                
+                login(request, user)
+                return JsonResponse({'success': True, 'message': 'Login successful!', 'redirect_url': '/admin/'})
+            else:
+                return JsonResponse({'error': 'Invalid username or password.'}, status=401)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
+
+    context = {
+        'submit_url': reverse('chatbot:admin_login'),
+        'page_title': 'Admin Sign In - AgriAssist',
+        'header_title': 'Admin Portal',
+        'welcome_text': 'Please sign in to access the admin dashboard.',
+        'show_signup_link': False
+    }
+    return render(request, 'login.html', context)
 
 @login_required
 def signout(request):
@@ -93,7 +156,7 @@ def signout(request):
     User signout view.
     """
     logout(request)
-    return redirect('chatbot:login')
+    return redirect('chatbot:login_selection')
 
 @login_required
 def chatbot_home(request):
@@ -115,6 +178,7 @@ def chatbot_home(request):
         'user_profile': user_profile,
         'chat_sessions': chat_sessions,
         'is_admin': request.user.is_staff or request.user.is_superuser,
+        'due_today_count': FarmReminder.objects.filter(user=request.user, date=date.today(), status='pending').count(),
     }
     return render(request, 'chatbot.html', context)
 
