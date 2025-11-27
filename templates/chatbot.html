@@ -16,6 +16,7 @@
             --text-main: #2D3748;
             --text-light: #A0AEC0;
             --white: #FFFFFF;
+            --card-bg: #FFFFFF;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --message-bot-bg: #FFFFFF;
             --input-bg: #FFFFFF;
@@ -29,6 +30,7 @@
             --message-bot-bg: #2D3748;
             --input-bg: #2D3748;
             --border-color: rgba(255, 255, 255, 0.1);
+            --card-bg: #0b1220;
         }
 
         * {
@@ -179,12 +181,13 @@
 
         .header {
             padding: 20px 40px;
-            background: var(--white);
+            background: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: var(--shadow);
+            z-index: 10;
         }
 
         .header h1 {
