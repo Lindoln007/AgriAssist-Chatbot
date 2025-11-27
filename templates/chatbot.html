@@ -237,7 +237,7 @@
 
         /* Ensure header and fixed elements are themed in dark mode */
         [data-theme="dark"] .header {
-            background: var(--white);
+            background: var(--card-bg);
             border-bottom-color: var(--border-color);
             color: var(--text-main);
         }
@@ -246,6 +246,14 @@
             background: transparent;
             color: var(--text-main);
             border-color: rgba(255,255,255,0.06);
+        }
+
+        /* Use card background for sidebar header and user-info in dark mode so
+           header and nearby fixed panels match */
+        [data-theme="dark"] .sidebar-header,
+        [data-theme="dark"] .user-info {
+            background: var(--card-bg);
+            border-top-color: var(--border-color);
         }
 
         /* Dark mode scrollbar styling for sidebar and chat messages */
