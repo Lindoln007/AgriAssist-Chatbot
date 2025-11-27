@@ -204,21 +204,66 @@
             gap: 12px;
         }
 
+        /* Round header icon buttons (match Government Updates style) */
         .header-btn {
-            padding: 10px 16px;
-            background: var(--white);
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
             color: var(--text-main);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.18s ease;
             text-decoration: none;
             position: relative;
         }
 
         .header-btn:hover {
-            background: var(--bg-color);
-            transform: translateY(-2px);
+            background: rgba(0,0,0,0.05);
+            transform: translateY(-3px);
+            color: var(--text-main);
+        }
+
+        /* Dark-mode hover behavior for header icons */
+        [data-theme="dark"] .header-btn:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* Ensure header and fixed elements are themed in dark mode */
+        [data-theme="dark"] .header {
+            background: var(--white);
+            border-bottom-color: var(--border-color);
+            color: var(--text-main);
+        }
+
+        [data-theme="dark"] .header-btn {
+            background: transparent;
+            color: var(--text-main);
+            border-color: rgba(255,255,255,0.06);
+        }
+
+        /* Dark mode scrollbar styling for sidebar and chat messages */
+        [data-theme="dark"] .chat-messages::-webkit-scrollbar,
+        [data-theme="dark"] .sidebar::-webkit-scrollbar {
+            width: 10px;
+        }
+        [data-theme="dark"] .chat-messages::-webkit-scrollbar-track,
+        [data-theme="dark"] .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        [data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb,
+        [data-theme="dark"] .sidebar::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 8px;
+            border: 2px solid transparent;
+        }
+
+        [data-theme="dark"] .chat-messages,
+        [data-theme="dark"] .sidebar {
+            scrollbar-color: #374151 transparent;
         }
 
         .notification-badge {
