@@ -215,7 +215,7 @@
             align-items: center;
             justify-content: center;
             background: transparent;
-            color: var(--text-main);
+            color: var(--primary);
             border: 1px solid var(--border-color);
             border-radius: 50%;
             cursor: pointer;
@@ -225,9 +225,9 @@
         }
 
         .header-btn:hover {
-            background: rgba(0,0,0,0.05);
+            background: rgba(47, 133, 90, 0.08);
             transform: translateY(-3px);
-            color: var(--text-main);
+            color: var(--primary);
         }
 
         /* Dark-mode hover behavior for header icons */
@@ -244,7 +244,7 @@
 
         [data-theme="dark"] .header-btn {
             background: transparent;
-            color: var(--text-main);
+            color: var(--primary-light);
             border-color: rgba(255,255,255,0.06);
         }
 
@@ -256,10 +256,30 @@
             border-top-color: var(--border-color);
         }
 
+        /* Light mode scrollbar styling for sidebar and chat messages */
+        .chat-messages::-webkit-scrollbar,
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-messages::-webkit-scrollbar-track,
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .chat-messages::-webkit-scrollbar-thumb,
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 8px;
+        }
+
+        .chat-messages,
+        .sidebar {
+            scrollbar-color: #D1D5DB transparent;
+        }
+
         /* Dark mode scrollbar styling for sidebar and chat messages */
         [data-theme="dark"] .chat-messages::-webkit-scrollbar,
         [data-theme="dark"] .sidebar::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
         [data-theme="dark"] .chat-messages::-webkit-scrollbar-track,
         [data-theme="dark"] .sidebar::-webkit-scrollbar-track {
@@ -267,14 +287,13 @@
         }
         [data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb,
         [data-theme="dark"] .sidebar::-webkit-scrollbar-thumb {
-            background: #374151;
+            background: #4B5563;
             border-radius: 8px;
-            border: 2px solid transparent;
         }
 
         [data-theme="dark"] .chat-messages,
         [data-theme="dark"] .sidebar {
-            scrollbar-color: #374151 transparent;
+            scrollbar-color: #4B5563 transparent;
         }
 
         .notification-badge {
