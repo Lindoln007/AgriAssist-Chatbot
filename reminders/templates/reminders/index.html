@@ -54,7 +54,7 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Sidebar (Simplified from chatbot) */
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background: var(--sidebar-bg);
@@ -106,6 +106,29 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: scale(1.1);
+        }
+
+        [data-theme="dark"] .header-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .content-scroll {
@@ -302,8 +325,7 @@
     <div class="main-content">
         <div class="header">
             <h1>Farm Calendar</h1>
-            <button id="theme-toggle-btn" class="btn"
-                style="background:transparent; color:var(--text-main); border:1px solid var(--border-color);">
+            <button id="theme-toggle-btn" class="header-btn">
                 <i class="fas fa-moon"></i>
             </button>
         </div>
@@ -396,7 +418,7 @@
     </div>
 
     <script>
-        // Theme Logic (Copied from chatbot)
+        // Theme Logic
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const themeIcon = themeToggleBtn.querySelector('i');
         const savedTheme = localStorage.getItem('chatbot_theme') || 'light';

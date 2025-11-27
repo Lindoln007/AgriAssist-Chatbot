@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>AgriAssist Chatbot</title>
@@ -15,20 +16,27 @@
             --text-main: #2D3748;
             --text-light: #A0AEC0;
             --white: #FFFFFF;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --message-bot-bg: #FFFFFF;
             --input-bg: #FFFFFF;
-            --border-color: rgba(0,0,0,0.05);
+            --border-color: rgba(0, 0, 0, 0.05);
         }
+
         [data-theme="dark"] {
             --bg-color: #1A202C;
             --sidebar-bg: #171923;
             --text-main: #F7FAFC;
             --message-bot-bg: #2D3748;
             --input-bg: #2D3748;
-            --border-color: rgba(255,255,255,0.1);
+            --border-color: rgba(255, 255, 255, 0.1);
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Outfit', sans-serif;
             background: var(--bg-color);
@@ -38,19 +46,22 @@
             color: var(--text-main);
             transition: all 0.3s;
         }
+
         .sidebar {
             width: 320px;
             background: var(--sidebar-bg);
             color: #FFF;
             display: flex;
             flex-direction: column;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
         }
+
         .sidebar-header {
             padding: 30px 25px;
-            background: rgba(0,0,0,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .sidebar-header h2 {
             font-size: 24px;
             font-weight: 700;
@@ -58,13 +69,18 @@
             align-items: center;
             gap: 10px;
         }
-        .sidebar-header h2 i { color: var(--primary-light); }
+
+        .sidebar-header h2 i {
+            color: var(--primary-light);
+        }
+
         .sidebar-header p {
             font-size: 13px;
             opacity: 0.7;
             margin-top: 5px;
             margin-left: 34px;
         }
+
         .new-chat-btn {
             margin: 25px;
             padding: 16px;
@@ -81,15 +97,18 @@
             justify-content: center;
             gap: 10px;
         }
+
         .new-chat-btn:hover {
             background: var(--primary);
             transform: translateY(-2px);
         }
+
         .chat-sessions {
             flex: 1;
             overflow-y: auto;
             padding: 0 15px;
         }
+
         .session-item {
             padding: 14px 16px;
             margin-bottom: 8px;
@@ -98,37 +117,49 @@
             transition: all 0.2s;
             display: flex;
             justify-content: space-between;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
         }
-        .session-item:hover { background: rgba(255,255,255,0.1); color: white; }
+
+        .session-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
         .session-item.active {
-            background: rgba(72,187,120,0.2);
+            background: rgba(72, 187, 120, 0.2);
             color: white;
             border-left: 3px solid var(--primary-light);
         }
+
         .session-delete {
             background: none;
             border: none;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             padding: 5px;
             font-size: 14px;
         }
-        .session-delete:hover { color: #FC8181; }
+
+        .session-delete:hover {
+            color: #FC8181;
+        }
+
         .user-info {
             padding: 20px 25px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
         }
+
         .user-info p {
             font-size: 13px;
-            color: rgba(255,255,255,0.9);
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 8px;
         }
+
         .logout-btn {
             width: 100%;
             padding: 12px;
-            background: rgba(252,129,129,0.2);
+            background: rgba(252, 129, 129, 0.2);
             color: #FEB2B2;
             border: none;
             border-radius: 8px;
@@ -138,12 +169,14 @@
             display: block;
             text-align: center;
         }
+
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
             background: var(--bg-color);
         }
+
         .header {
             padding: 20px 40px;
             background: var(--white);
@@ -153,6 +186,7 @@
             align-items: center;
             box-shadow: var(--shadow);
         }
+
         .header h1 {
             font-size: 24px;
             color: var(--text-main);
@@ -160,8 +194,16 @@
             align-items: center;
             gap: 12px;
         }
-        .header h1 i { color: var(--primary); }
-        .header-actions { display: flex; gap: 12px; }
+
+        .header h1 i {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
         .header-btn {
             padding: 10px 16px;
             background: var(--white);
@@ -173,10 +215,12 @@
             text-decoration: none;
             position: relative;
         }
+
         .header-btn:hover {
             background: var(--bg-color);
             transform: translateY(-2px);
         }
+
         .notification-badge {
             position: absolute;
             top: -5px;
@@ -188,6 +232,7 @@
             font-size: 11px;
             font-weight: bold;
         }
+
         .chat-container {
             flex: 1;
             display: flex;
@@ -195,6 +240,7 @@
             padding: 30px 40px;
             overflow: hidden;
         }
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -204,25 +250,36 @@
             flex-direction: column;
             gap: 24px;
         }
+
         .message {
             padding: 20px 24px;
             border-radius: 20px;
             max-width: 85%;
             line-height: 1.6;
             font-size: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
             animation: fadeIn 0.3s;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .user-message {
             background: var(--primary);
             color: #FFF;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
+
         .bot-message {
             background: var(--message-bot-bg);
             color: var(--text-main);
@@ -230,15 +287,17 @@
             border-bottom-left-radius: 4px;
             border: 1px solid var(--border-color);
         }
+
         .input-container {
             display: flex;
             gap: 16px;
             background: var(--input-bg);
             padding: 10px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border-color);
         }
+
         #user-input {
             flex: 1;
             padding: 16px 20px;
@@ -248,7 +307,11 @@
             font-family: inherit;
             color: var(--text-main);
         }
-        #user-input:focus { outline: none; }
+
+        #user-input:focus {
+            outline: none;
+        }
+
         #send-button {
             padding: 14px 28px;
             background: var(--primary);
@@ -261,8 +324,18 @@
             align-items: center;
             gap: 8px;
         }
-        #send-button:hover { background: var(--primary-dark); }
-        .loading { display: none; color: var(--text-light); margin-top: 10px; text-align: center; }
+
+        #send-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .loading {
+            display: none;
+            color: var(--text-light);
+            margin-top: 10px;
+            text-align: center;
+        }
+
         .empty-state {
             display: flex;
             flex-direction: column;
@@ -272,12 +345,14 @@
             color: var(--text-light);
             text-align: center;
         }
+
         .empty-state i {
             font-size: 48px;
             color: var(--primary-light);
             margin-bottom: 20px;
             opacity: 0.5;
         }
+
         .empty-state h2 {
             font-size: 24px;
             color: var(--text-main);
@@ -285,6 +360,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
@@ -335,186 +411,229 @@
                 </div>
             </div>
             <div class="input-container">
-                <input type="text" id="user-input" placeholder="Ask about farming, pests, fertilizers..."/>
+                <input type="text" id="user-input" placeholder="Ask about farming, pests, fertilizers..." />
                 <button id="send-button"><i class="fas fa-paper-plane"></i> Send</button>
             </div>
             <div id="loading" class="loading">Thinking...</div>
         </div>
     </div>
     <script>
-        let currentSessionId=null;
-        const chatMessages=document.getElementById('chat-messages');
-        const userInput=document.getElementById('user-input');
-        const sendButton=document.getElementById('send-button');
-        const loading=document.getElementById('loading');
-        const chatSessionsDiv=document.getElementById('chat-sessions');
+        let currentSessionId = null;
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const loading = document.getElementById('loading');
+        const chatSessionsDiv = document.getElementById('chat-sessions');
+
         loadChatSessions();
-        const themeToggleBtn=document.getElementById('theme-toggle-btn');
-        const themeIcon=themeToggleBtn.querySelector('i');
-        const savedTheme=localStorage.getItem('chatbot_theme')||'light';
-        if(savedTheme==='dark'){
-            document.documentElement.setAttribute('data-theme','dark');
-            themeIcon.classList.replace('fa-moon','fa-sun');
+
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        const savedTheme = localStorage.getItem('chatbot_theme') || 'light';
+
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
         }
-        themeToggleBtn.addEventListener('click',()=>{
-            const currentTheme=document.documentElement.getAttribute('data-theme');
-            if(currentTheme==='dark'){
-                document.documentElement.setAttribute('data-theme','light');
-                localStorage.setItem('chatbot_theme','light');
-                themeIcon.classList.replace('fa-sun','fa-moon');
-            }else{
-                document.documentElement.setAttribute('data-theme','dark');
-                localStorage.setItem('chatbot_theme','dark');
-                themeIcon.classList.replace('fa-moon','fa-sun');
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('chatbot_theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('chatbot_theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
             }
         });
-        function escapeHtml(unsafe){
-            return unsafe.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
-        function renderMessageContent(text){
-            if(!text&&text!==0)return '';
-            let s=String(text);
-            s=escapeHtml(s);
-            s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-            s=s.replace(/\r?\n/g,'<br>');
+
+        function renderMessageContent(text) {
+            if (!text && text !== 0) return '';
+            let s = String(text);
+            s = escapeHtml(s);
+            s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            s = s.replace(/\r?\n/g, '<br>');
             return s;
         }
-        function addMessage(content,isUser=false){
-            if(chatMessages.querySelector('.empty-state')){
-                chatMessages.innerHTML='';
+
+        function addMessage(content, isUser = false) {
+            if (chatMessages.querySelector('.empty-state')) {
+                chatMessages.innerHTML = '';
             }
-            const messageDiv=document.createElement('div');
-            messageDiv.className=message ${isUser?'user-message':'bot-message'};
-            messageDiv.innerHTML=renderMessageContent(content);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            messageDiv.innerHTML = renderMessageContent(content);
             chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop=chatMessages.scrollHeight;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        async function sendMessage(){
-            const question=userInput.value.trim();
-            if(!question)return;
-            addMessage(question,true);
-            userInput.value='';
-            loading.style.display='block';
-            try{
-                const payload={question:question,session_id:currentSessionId};
-                const response=await fetch('{% url "chatbot:api" %}',{
-                    method:'POST',
-                    headers:{'Content-Type':'application/json','X-CSRFToken':getCookie('csrftoken')},
-                    body:JSON.stringify(payload)
+
+        async function sendMessage() {
+            const question = userInput.value.trim();
+            if (!question) return;
+
+            addMessage(question, true);
+            userInput.value = '';
+            loading.style.display = 'block';
+
+            try {
+                const payload = {
+                    question: question,
+                    session_id: currentSessionId
+                };
+
+                const response = await fetch('{% url "chatbot:api" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(payload)
                 });
-                const data=await response.json();
-                if(response.ok){
-                    currentSessionId=data.session_id;
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentSessionId = data.session_id;
                     addMessage(data.response);
                     loadChatSessions();
-                }else{
-                    addMessage('Error: '+(data.error||'Unknown error'));
+                } else {
+                    addMessage('Error: ' + (data.error || 'Unknown error'));
                 }
-            }catch(error){
-                console.error('Fetch error:',error);
+            } catch (error) {
+                console.error('Fetch error:', error);
                 addMessage('Error: Unable to connect to the server.');
             }
-            loading.style.display='none';
+            loading.style.display = 'none';
         }
-        function getCookie(name){
-            let cookieValue=null;
-            if(document.cookie&&document.cookie!==''){
-                const cookies=document.cookie.split(';');
-                for(let i=0;i<cookies.length;i++){
-                    const cookie=cookies[i].trim();
-                    if(cookie.substring(0,name.length+1)===(name+'=')){
-                        cookieValue=decodeURIComponent(cookie.substring(name.length+1));
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
                     }
                 }
             }
             return cookieValue;
         }
-        async function loadChatSessions(){
-            try{
-                const response=await fetch('{% url "chatbot:get_sessions" %}');
-                const data=await response.json();
-                if(response.ok&&data.sessions.length>0){
+
+        async function loadChatSessions() {
+            try {
+                const response = await fetch('{% url "chatbot:get_sessions" %}');
+                const data = await response.json();
+
+                if (response.ok && data.sessions.length > 0) {
                     displaySessions(data.sessions);
-                }else{
-                    chatSessionsDiv.innerHTML='<p style="padding:15px;color:#999;font-size:12px;">No previous chats</p>';
+                } else {
+                    chatSessionsDiv.innerHTML = '<p style="padding:15px;color:#999;font-size:12px;">No previous chats</p>';
                 }
-            }catch(error){
-                console.error('Error loading sessions:',error);
-                chatSessionsDiv.innerHTML='<p style="padding:15px;color:#999;font-size:12px;">Error loading history</p>';
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+                chatSessionsDiv.innerHTML = '<p style="padding:15px;color:#999;font-size:12px;">Error loading history</p>';
             }
         }
-        function displaySessions(sessions){
-            chatSessionsDiv.innerHTML='';
-            sessions.forEach(session=>{
-                const sessionEl=document.createElement('div');
-                sessionEl.className=session-item ${session.id===currentSessionId?'active':''};
-                sessionEl.dataset.sessionId=session.id;
-                const titleEl=document.createElement('span');
-                titleEl.textContent=session.title;
-                titleEl.style.cursor='pointer';
-                titleEl.style.flex='1';
-                titleEl.onclick=()=>loadSessionMessages(session.id);
-                const deleteBtn=document.createElement('button');
-                deleteBtn.className='session-delete';
-                deleteBtn.innerHTML='<i class="fas fa-trash-alt"></i>';
-                deleteBtn.onclick=(e)=>{
+
+        function displaySessions(sessions) {
+            chatSessionsDiv.innerHTML = '';
+            sessions.forEach(session => {
+                const sessionEl = document.createElement('div');
+                sessionEl.className = `session-item ${session.id === currentSessionId ? 'active' : ''}`;
+                sessionEl.dataset.sessionId = session.id;
+
+                const titleEl = document.createElement('span');
+                titleEl.textContent = session.title;
+                titleEl.style.cursor = 'pointer';
+                titleEl.style.flex = '1';
+                titleEl.onclick = () => loadSessionMessages(session.id);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'session-delete';
+                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                deleteBtn.onclick = (e) => {
                     e.stopPropagation();
                     deleteSession(session.id);
                 };
+
                 sessionEl.appendChild(titleEl);
                 sessionEl.appendChild(deleteBtn);
                 chatSessionsDiv.appendChild(sessionEl);
             });
         }
-        async function loadSessionMessages(sessionId){
-            try{
-                const response=await fetch(/chatbot/session/${sessionId}/);
-                const data=await response.json();
-                if(response.ok){
-                    currentSessionId=sessionId;
-                    chatMessages.innerHTML='';
-                    document.querySelectorAll('.session-item').forEach(el=>el.classList.remove('active'));
-                    const activeEl=document.querySelector([data-session-id="${sessionId}"]);
-                    if(activeEl)activeEl.classList.add('active');
-                    data.messages.forEach(msg=>{
-                        addMessage(msg.user_message,true);
-                        addMessage(msg.bot_response,false);
+
+        async function loadSessionMessages(sessionId) {
+            try {
+                const response = await fetch(`/chatbot/session/${sessionId}/`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentSessionId = sessionId;
+                    chatMessages.innerHTML = '';
+
+                    document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
+                    const activeEl = document.querySelector(`[data-session-id="${sessionId}"]`);
+                    if (activeEl) activeEl.classList.add('active');
+
+                    data.messages.forEach(msg => {
+                        addMessage(msg.user_message, true);
+                        addMessage(msg.bot_response, false);
                     });
                 }
-            }catch(error){
-                console.error('Error loading session:',error);
+            } catch (error) {
+                console.error('Error loading session:', error);
                 addMessage('Error loading chat history');
             }
         }
-        async function deleteSession(sessionId){
-            if(!confirm('Delete this chat session?'))return;
-            try{
-                const response=await fetch(/chatbot/session/${sessionId}/delete/,{
-                    method:'POST',
-                    headers:{'X-CSRFToken':getCookie('csrftoken')}
+
+        async function deleteSession(sessionId) {
+            if (!confirm('Delete this chat session?')) return;
+
+            try {
+                const response = await fetch(`/chatbot/session/${sessionId}/delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
                 });
-                if(response.ok){
-                    if(currentSessionId===sessionId){
+
+                if (response.ok) {
+                    if (currentSessionId === sessionId) {
                         startNewChat();
                     }
                     loadChatSessions();
                 }
-            }catch(error){
-                console.error('Error deleting session:',error);
+            } catch (error) {
+                console.error('Error deleting session:', error);
             }
         }
-        function startNewChat(){
-            currentSessionId=null;
-            chatMessages.innerHTML='<div class="empty-state"><i class="fas fa-seedling"></i><h2>Welcome to AgriAssist</h2><p>Start a new conversation about agricultural topics</p></div>';
-            document.querySelectorAll('.session-item').forEach(el=>el.classList.remove('active'));
+
+        function startNewChat() {
+            currentSessionId = null;
+            chatMessages.innerHTML = '<div class="empty-state"><i class="fas fa-seedling"></i><h2>Welcome to AgriAssist</h2><p>Start a new conversation about agricultural topics</p></div>';
+            document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
         }
-        sendButton.addEventListener('click',sendMessage);
-        userInput.addEventListener('keypress',function(e){
-            if(e.key==='Enter'){
+
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
                 sendMessage();
             }
         });
     </script>
 </body>
+
 </html>
