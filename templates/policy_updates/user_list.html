@@ -383,8 +383,7 @@
                 {% for update in updates %}
                 <div class="update-card" onclick="window.location='{% url 'policy_updates:user_detail' update.id %}'">
                     <div class="update-header">
-                        <span class="category-badge category-{{ update.category }}">{{ update.get_category_display
-                            }}</span>
+                        <span class="category-badge category-{{ update.category }}">{{ update.get_category_display }}</span>
                         {% if update.date_posted >= seven_days_ago %}
                         <span class="new-badge">NEW</span>
                         {% endif %}
