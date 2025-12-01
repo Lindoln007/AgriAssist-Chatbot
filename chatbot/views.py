@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 import json
 from .utils import query_mistral_llm, fetch_api_data, format_api_data_for_context, search_agricultural_data
+from weather.utils import get_coordinates, get_weather_forecast, analyze_weather_for_farming, extract_location_from_text
 from .models import ChatSession, ChatMessage, UserProfile
 from reminders.models import FarmReminder
 from datetime import date
@@ -251,6 +252,41 @@ def chatbot_api(request):
         api_data = fetch_api_data()
         api_context = format_api_data_for_context(api_data)
 
+        # --- Weather Integration ---
+        # Check if weather is relevant to the question
+        weather_keywords = ['weather', 'rain', 'temperature', 'forecast', 'plant', 'irrigation', 'farm', 'crop', 'pest', 'disease']
+        if any(keyword in question.lower() for keyword in weather_keywords):
+            # 1. Try to find location in the question
+            target_location = extract_location_from_text(question)
+            
+            # 2. If not found, use user's profile location
+            if not target_location:
+                try:
+                    user_profile = UserProfile.objects.get(user=request.user)
+                    if user_profile.location:
+                        target_location = user_profile.location
+                except UserProfile.DoesNotExist:
+                    pass
+            
+            # 3. Default to Lilongwe if still unknown
+            if not target_location:
+                target_location = "Lilongwe"
+
+            # Fetch weather data
+            coords = get_coordinates(target_location)
+            if coords:
+                w_data = get_weather_forecast(coords['lat'], coords['lon'])
+                if w_data:
+                    analysis = analyze_weather_for_farming(w_data)
+                    weather_context = f"\n\n### 🌤️ Real-time Weather for {coords['name']} (Malawi):\n"
+                    weather_context += f"- **Temperature:** {w_data['current_weather']['temperature']}°C\n"
+                    weather_context += f"- **Wind Speed:** {w_data['current_weather']['windspeed']} km/h\n"
+                    weather_context += f"- **Wind Direction:** {w_data['current_weather']['winddirection']}°\n"
+                    weather_context += f"- **Farming Analysis:** {analysis}\n"
+                    
+                    api_context += weather_context
+        # ---------------------------
+
         # Build conversation history from previous messages in this session
         # and pass it to the LLM so it can maintain conversational state.
         conversation_history = []
@@ -399,4 +435,3 @@ def get_user_sessions(request):
         return JsonResponse({'sessions': sessions_list})
     except Exception as e:
         return JsonResponse({'error': f'An error occurred: {str(e)}'}, status=500)
-

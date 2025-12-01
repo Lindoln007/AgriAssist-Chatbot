@@ -34,6 +34,7 @@ urlpatterns = [
     path('chatbot/', include('chatbot.urls')),
     path('reminders/', include('reminders.urls')),
     path('policy-updates/', include('policy_updates.urls')),
+    path('weather/', include('weather.urls')),
 ]
 
 # Serve media files in development

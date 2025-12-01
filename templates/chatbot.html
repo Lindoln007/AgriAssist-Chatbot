@@ -232,7 +232,7 @@
 
         /* Dark-mode hover behavior for header icons */
         [data-theme="dark"] .header-btn:hover {
-            background: rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         /* Ensure header and fixed elements are themed in dark mode */
@@ -245,7 +245,7 @@
         [data-theme="dark"] .header-btn {
             background: transparent;
             color: var(--primary-light);
-            border-color: rgba(255,255,255,0.06);
+            border-color: rgba(255, 255, 255, 0.06);
         }
 
         /* Use card background for sidebar header and user-info in dark mode so
@@ -261,10 +261,12 @@
         .sidebar::-webkit-scrollbar {
             width: 8px;
         }
+
         .chat-messages::-webkit-scrollbar-track,
         .sidebar::-webkit-scrollbar-track {
             background: transparent;
         }
+
         .chat-messages::-webkit-scrollbar-thumb,
         .sidebar::-webkit-scrollbar-thumb {
             background: #D1D5DB;
@@ -281,10 +283,12 @@
         [data-theme="dark"] .sidebar::-webkit-scrollbar {
             width: 8px;
         }
+
         [data-theme="dark"] .chat-messages::-webkit-scrollbar-track,
         [data-theme="dark"] .sidebar::-webkit-scrollbar-track {
             background: transparent;
         }
+
         [data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb,
         [data-theme="dark"] .sidebar::-webkit-scrollbar-thumb {
             background: #4B5563;
@@ -442,6 +446,12 @@
             <h2><i class="fas fa-leaf"></i> AgriAssist</h2>
             <p>Chat History</p>
         </div>
+        <div style="padding: 10px 20px;">
+            <a href="{% url 'weather:index' %}"
+                style="display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.8); text-decoration: none; padding: 10px; border-radius: 8px; transition: background 0.2s;">
+                <i class="fas fa-cloud-sun"></i> Weather & Insights
+            </a>
+        </div>
         <button class="new-chat-btn" onclick="startNewChat()">
             <i class="fas fa-plus"></i> New Chat
         </button>
@@ -471,6 +481,9 @@
                 </a>
                 <a href="{% url 'policy_updates:user_list' %}" class="header-btn" title="Government Updates">
                     <i class="fas fa-landmark"></i>
+                </a>
+                <a href="{% url 'weather:index' %}" class="header-btn" title="Weather & Insights">
+                    <i class="fas fa-cloud-sun"></i>
                 </a>
                 <button id="theme-toggle-btn" class="header-btn" title="Toggle Dark Mode">
                     <i class="fas fa-moon"></i>
