@@ -123,29 +123,29 @@ def analyze_weather_for_farming(weather_data):
     
     # 1. Irrigation Advice
     if precip_prob > 50:
-        recommendations.append("🌧️ **Irrigation:** Rain is expected. Suspend irrigation to save water and prevent waterlogging.")
+        recommendations.append("🌧️ <strong>Irrigation:</strong> Rain is expected. Suspend irrigation to save water and prevent waterlogging.")
     elif avg_soil_moisture < 0.2:
-        recommendations.append("💧 **Irrigation:** Soil moisture is low. Irrigation is recommended, preferably in the early morning or late afternoon.")
+        recommendations.append("💧 <strong>Irrigation:</strong> Soil moisture is low. Irrigation is recommended, preferably in the early morning or late afternoon.")
     else:
-        recommendations.append("✅ **Irrigation:** Soil moisture levels are adequate. No immediate irrigation needed.")
+        recommendations.append("✅ <strong>Irrigation:</strong> Soil moisture levels are adequate. No immediate irrigation needed.")
 
     # 2. Planting/Harvesting
     if precip_prob > 20:
-        recommendations.append("🚜 **Field Work:** Avoid applying fertilizers or pesticides today as rain may wash them away. Delay harvesting to prevent crop spoilage.")
+        recommendations.append("🚜 <strong>Field Work:</strong> Avoid applying fertilizers or pesticides today as rain may wash them away. Delay harvesting to prevent crop spoilage.")
     elif wind_speed > 20:
-        recommendations.append("💨 **Spraying:** High wind speeds detected. Avoid spraying pesticides to prevent drift.")
+        recommendations.append("💨 <strong>Spraying:</strong> High wind speeds detected. Avoid spraying pesticides to prevent drift.")
     else:
-        recommendations.append("🌱 **Field Work:** Conditions are favorable for planting, weeding, and applying fertilizers.")
+        recommendations.append("🌱 <strong>Field Work:</strong> Conditions are favorable for planting, weeding, and applying fertilizers.")
 
     # 3. Pest & Disease
     if avg_humidity > 80 and temp > 20:
-        recommendations.append("🐛 **Pests & Disease:** High humidity and warm temperatures favor fungal diseases like blight. Monitor crops closely.")
+        recommendations.append("🐛 <strong>Pests & Disease:</strong> High humidity and warm temperatures favor fungal diseases like blight. Monitor crops closely.")
     
     # 4. Livestock
     if temp > 30:
-        recommendations.append("cow **Livestock:** High temperatures expected. Ensure animals have plenty of shade and water to prevent heat stress.")
+        recommendations.append("🐄 <strong>Livestock:</strong> High temperatures expected. Ensure animals have plenty of shade and water to prevent heat stress.")
     elif temp < 15:
-        recommendations.append("chick **Livestock:** Cooler temperatures expected. Ensure young animals (chicks, piglets) have adequate warmth.")
+        recommendations.append("🐔 <strong>Livestock:</strong> Cooler temperatures expected. Ensure young animals (chicks, piglets) have adequate warmth.")
 
     return "\n\n".join(recommendations)
 

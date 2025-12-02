@@ -313,8 +313,9 @@
                     <div class="current-weather">
                         <div>
                             <div class="temp-display">{{ weather.current_weather.temperature }}°C</div>
-                            <div style="color: var(--text-light); margin-top: 5px;">Wind: {{
-                                weather.current_weather.windspeed }} km/h</div>
+                            <div style="color: var(--text-light); margin-top: 5px;">
+                                Wind: {{ weather.current_weather.windspeed }} km/h
+                            </div>
                         </div>
                         <div class="weather-icon">
                             {% if weather.current_weather.temperature > 25 %}
