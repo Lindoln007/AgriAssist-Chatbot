@@ -172,6 +172,42 @@
             gap: 25px;
         }
 
+        .seven-panel {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+            overflow-x: auto;
+            padding-bottom: 8px; /* room for scrollbar */
+        }
+
+        /* ensure day tiles keep a consistent width so panel can scroll horizontally */
+        .seven-panel .day-tile {
+            background: rgba(0,0,0,0.03);
+            border-radius: 12px;
+            padding: 12px;
+            flex: 0 0 120px;
+            text-align: left;
+        }
+
+        /* scrollbar styling for better visibility */
+        .seven-panel::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .seven-panel::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.04);
+            border-radius: 8px;
+        }
+
+        .seven-panel::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.12);
+            border-radius: 8px;
+        }
+
+        [data-theme="dark"] .day-tile {
+            background: rgba(255,255,255,0.02);
+        }
+
         .weather-card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -305,6 +341,21 @@
                 <button type="submit" class="search-btn"><i class="fas fa-search"></i> Get Forecast</button>
             </form>
 
+            {% if override_active %}
+            <div style="margin:12px 0; display:flex; gap:8px; align-items:center;">
+                <div style="background:#FFF3CD; color:#856404; padding:10px 12px; border-radius:8px;">Showing weather for <strong>{{ override_value }}</strong> (temporary)</div>
+                <form method="POST" style="display:inline; margin-left:6px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="save_location" value="{{ override_value }}">
+                    <button type="submit" name="save" value="1" class="search-btn">Save as my district</button>
+                </form>
+                <form method="POST" style="display:inline; margin-left:6px;">
+                    {% csrf_token %}
+                    <button type="submit" name="clear_override" value="1" class="search-btn">Use my saved district</button>
+                </form>
+            </div>
+            {% endif %}
+
             {% if weather %}
             <div class="weather-grid">
                 <!-- Current Conditions Card -->
@@ -343,13 +394,34 @@
                     </div>
                 </div>
 
-                <!-- Farming Insights Card -->
+                <!-- 7-day forecast panel (right column) -->
+                <div class="weather-card">
+                    <div class="location-display"><i class="fas fa-calendar-alt"></i> 7‑Day Forecast</div>
+                    <div style="margin-top:12px;" class="seven-panel">
+                        {% if daily_list %}
+                            {% for d in daily_list %}
+                            <div class="day-tile">
+                                <div style="font-size:13px; color:var(--text-light); font-weight:700;">{{ d.date }}</div>
+                                <div style="font-size:18px; font-weight:800; color:var(--text-main);">{% if d.tmax %}{{ d.tmax|floatformat:0 }}°{% else %}-{% endif %} / {% if d.tmin %}{{ d.tmin|floatformat:0 }}°{% else %}-{% endif %}</div>
+                                <div style="margin-top:6px; color:var(--text-light); font-size:13px;">Precip: {% if d.precip is not None %}{{ d.precip|floatformat:1 }} mm{% else %}-{% endif %}</div>
+                                <div style="margin-top:4px; color:var(--text-light); font-size:13px;">Wind: {% if d.wind is not None %}{{ d.wind|floatformat:0 }} km/h{% else %}-{% endif %}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div style="color:var(--text-light);">7-day forecast unavailable.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Farming Insights Card (full width below) -->
+            <div style="margin-top:18px;">
                 <div class="weather-card recommendation-card">
                     <div class="recommendation-title">
                         <i class="fas fa-robot"></i> AgriAssist Farming Insights
                     </div>
                     <div class="recommendation-content">
-                        {{ analysis|safe|linebreaks }}
+                        {{ analysis|safe }}
                     </div>
                 </div>
             </div>

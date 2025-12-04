@@ -259,14 +259,24 @@ def chatbot_api(request):
             # 1. Try to find location in the question
             target_location = extract_location_from_text(question)
             
-            # 2. If not found, use user's profile location
+            # 2. If not found, prefer any temporary session override, then user's profile location
             if not target_location:
+                # session-based temporary override (set by weather page searches)
+                session_override = None
                 try:
-                    user_profile = UserProfile.objects.get(user=request.user)
-                    if user_profile.location:
-                        target_location = user_profile.location
-                except UserProfile.DoesNotExist:
-                    pass
+                    session_override = request.session.get('weather_override')
+                except Exception:
+                    session_override = None
+
+                if session_override:
+                    target_location = session_override
+                else:
+                    try:
+                        user_profile = UserProfile.objects.get(user=request.user)
+                        if user_profile.location:
+                            target_location = user_profile.location
+                    except UserProfile.DoesNotExist:
+                        pass
             
             # 3. Default to Lilongwe if still unknown
             if not target_location:
