@@ -437,6 +437,306 @@
             color: var(--text-main);
             margin-bottom: 12px;
         }
+
+        /* Settings Modal Styles */
+        .settings-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s;
+        }
+
+        .settings-modal.active {
+            display: flex;
+        }
+
+        .settings-panel {
+            background: var(--card-bg);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .settings-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+        }
+
+        .settings-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-header h2 i {
+            color: var(--primary);
+        }
+
+        .settings-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .settings-close:hover {
+            background: var(--border-color);
+        }
+
+        .settings-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .settings-category {
+            margin-bottom: 30px;
+        }
+
+        .settings-category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .settings-category-header i {
+            font-size: 20px;
+            color: var(--primary);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(47, 133, 90, 0.1);
+            border-radius: 8px;
+        }
+
+        .settings-category-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .settings-category-header .admin-badge {
+            display: inline-block;
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .setting-info p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .setting-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setting-control input[type="text"],
+        .setting-control input[type="number"] {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-color);
+            color: var(--text-main);
+            width: 180px;
+        }
+
+        .setting-control select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-color);
+            color: var(--text-main);
+            width: 180px;
+            cursor: pointer;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .setting-save-btn {
+            padding: 6px 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .setting-save-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .setting-save-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .settings-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .settings-empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .settings-empty i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        .settings-success {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #48BB78;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1001;
+            animation: slideInRight 0.3s;
+        }
+
+        .settings-success.show {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
 
@@ -479,6 +779,9 @@
                 <a href="{% url 'weather:index' %}" class="header-btn" title="Weather & Insights">
                     <i class="fas fa-cloud-sun"></i>
                 </a>
+                <button id="settings-btn" class="header-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
                 <button id="theme-toggle-btn" class="header-btn" title="Toggle Dark Mode">
                     <i class="fas fa-moon"></i>
                 </button>
@@ -499,6 +802,29 @@
             <div id="loading" class="loading">Thinking...</div>
         </div>
     </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="settings-modal">
+        <div class="settings-panel">
+            <div class="settings-header">
+                <h2><i class="fas fa-cog"></i> Settings</h2>
+                <button class="settings-close" onclick="closeSettings()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="settings-content" id="settings-content">
+                <div class="settings-loading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading settings...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Notification -->
+    <div id="settings-success" class="settings-success">
+        <i class="fas fa-check-circle"></i> Setting updated successfully!
+    </div>
+
     <script>
         let currentSessionId = null;
         const chatMessages = document.getElementById('chat-messages');
@@ -530,6 +856,226 @@
                 themeIcon.classList.replace('fa-moon', 'fa-sun');
             }
         });
+
+        // Settings Modal Functions
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsModal = document.getElementById('settings-modal');
+        const settingsContent = document.getElementById('settings-content');
+
+        settingsBtn.addEventListener('click', () => {
+            openSettings();
+        });
+
+        // Close modal when clicking outside
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                closeSettings();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && settingsModal.classList.contains('active')) {
+                closeSettings();
+            }
+        });
+
+        function openSettings() {
+            settingsModal.classList.add('active');
+            loadSettings();
+        }
+
+        function closeSettings() {
+            settingsModal.classList.remove('active');
+        }
+
+        function loadSettings() {
+            settingsContent.innerHTML = '<div class="settings-loading"><i class="fas fa-spinner fa-spin"></i> Loading settings...</div>';
+            
+            // Fetch settings data via JSON API with cache busting
+            fetch('{% url "settings:index" %}?format=json&t=' + Date.now(), {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Cache-Control': 'no-cache'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.settings && data.settings.length > 0) {
+                        renderSettingsFromJSON(data.settings, data.is_admin);
+                    } else {
+                        // If no settings returned, try reloading (they should be auto-created)
+                        setTimeout(() => {
+                            loadSettings();
+                        }, 500);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    settingsContent.innerHTML = '<div class="settings-empty"><i class="fas fa-exclamation-triangle"></i><h3>Error Loading Settings</h3><p>Please try again later.</p></div>';
+                });
+        }
+
+        function renderSettingsFromJSON(settingsData, isAdmin) {
+            let html = '';
+            
+            settingsData.forEach(catData => {
+                const category = catData.category;
+                // Filter out language settings
+                const userSettings = catData.user_settings.filter(s => s.key !== 'language');
+                const systemSettings = catData.system_settings.filter(s => s.key !== 'default_language');
+                const hasUserSettings = userSettings.length > 0;
+                const hasSystemSettings = systemSettings.length > 0;
+                
+                if (!hasUserSettings && !hasSystemSettings) return;
+                
+                html += `<div class="settings-category">`;
+                html += `<div class="settings-category-header">`;
+                html += `<i class="${category.icon}"></i>`;
+                html += `<h3>${category.display_name}`;
+                if (category.is_admin_only) {
+                    html += `<span class="admin-badge">ADMIN</span>`;
+                }
+                html += `</h3>`;
+                if (category.description) {
+                    html += `<p style="font-size:13px;color:var(--text-light);margin-top:4px;">${category.description}</p>`;
+                }
+                html += `</div>`;
+                
+                // User settings (filtered)
+                userSettings.forEach(setting => {
+                    html += renderSettingRow(setting, 'user');
+                });
+                
+                // System settings (admin only, filtered)
+                if (isAdmin) {
+                    systemSettings.forEach(setting => {
+                        html += renderSettingRow(setting, 'system');
+                    });
+                }
+                
+                html += `</div>`;
+            });
+            
+            if (html === '') {
+                html = '<div class="settings-empty"><i class="fas fa-cog"></i><h3>No Settings Available</h3><p>Settings will appear here once configured.</p></div>';
+            }
+            
+            settingsContent.innerHTML = html;
+            attachEventListeners();
+        }
+
+        function renderSettingRow(setting, settingType) {
+            let html = `<div class="setting-row" data-setting-key="${setting.key}" data-setting-type="${settingType}">`;
+            html += `<div class="setting-info">`;
+            html += `<h4>${setting.display_name}`;
+            if (settingType === 'system') {
+                html += `<span class="admin-badge" style="margin-left:8px;">SYSTEM</span>`;
+            }
+            html += `</h4>`;
+            if (setting.description) {
+                html += `<p>${setting.description}</p>`;
+            }
+            html += `</div>`;
+            html += `<div class="setting-control">`;
+            
+            if (setting.setting_type === 'boolean') {
+                html += `<label class="toggle-switch">`;
+                html += `<input type="checkbox" ${setting.value ? 'checked' : ''}>`;
+                html += `<span class="toggle-slider"></span>`;
+                html += `</label>`;
+            } else if (setting.setting_type === 'choice' && setting.options.length > 0) {
+                html += `<select>`;
+                setting.options.forEach(opt => {
+                    html += `<option value="${opt.value}" ${setting.value === opt.value ? 'selected' : ''}>${opt.display_name}</option>`;
+                });
+                html += `</select>`;
+            } else if (setting.setting_type === 'integer') {
+                html += `<input type="number" value="${setting.value || 0}">`;
+            } else {
+                html += `<input type="text" value="${setting.value || ''}">`;
+            }
+            
+            html += `<button class="setting-save-btn"><i class="fas fa-save"></i> Save</button>`;
+            html += `</div>`;
+            html += `</div>`;
+            
+            return html;
+        }
+
+        function attachEventListeners() {
+            // Attach save button listeners
+            const saveButtons = settingsContent.querySelectorAll('.setting-save-btn');
+            saveButtons.forEach(btn => {
+                if (!btn.hasAttribute('data-listener-attached')) {
+                    btn.setAttribute('data-listener-attached', 'true');
+                    btn.addEventListener('click', function() {
+                        const settingItem = this.closest('.setting-row');
+                        const settingKey = settingItem.getAttribute('data-setting-key');
+                        const settingType = settingItem.getAttribute('data-setting-type') || 'user';
+                        saveSetting(settingType, settingKey, this);
+                    });
+                }
+            });
+        }
+
+        function saveSetting(settingType, settingKey, button) {
+            const settingItem = button.closest('.setting-row');
+            const input = settingItem.querySelector('input, select');
+            let value;
+            
+            if (input.type === 'checkbox') {
+                value = input.checked;
+            } else {
+                value = input.value;
+            }
+
+            button.disabled = true;
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            const url = settingType === 'user' 
+                ? '{% url "settings:update_user_setting" %}'
+                : '{% url "settings:update_system_setting" %}';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    key: settingKey,
+                    value: value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSettingsSuccess();
+                    button.innerHTML = originalHTML;
+                    // Optionally reload settings to reflect any computed changes
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to save setting'));
+                    button.innerHTML = originalHTML;
+                }
+                button.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving setting. Please try again.');
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+            });
+        }
+
+        function showSettingsSuccess() {
+            const successMsg = document.getElementById('settings-success');
+            successMsg.classList.add('show');
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 3000);
+        }
 
         function escapeHtml(unsafe) {
             return unsafe
