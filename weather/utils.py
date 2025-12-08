@@ -274,3 +274,4 @@ def extract_location_from_text(text):
             
     return None
 
+
