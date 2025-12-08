@@ -204,7 +204,7 @@ def analyze_weather_for_farming(weather_data):
         if cold_alert_days > 0:
             recommendations.append('\n❄️ <strong>Cold Alert:</strong> Low night temperatures expected. Protect sensitive seedlings and young livestock.')
 
-        return "\n\n".join(recommendations)
+        return "\\n".join(recommendations)
 
     # --- Fallback: hourly / current-based recommendations (previous behavior) ---
     temp = today_temp
@@ -273,3 +273,4 @@ def extract_location_from_text(text):
             return loc.title()
             
     return None
+
