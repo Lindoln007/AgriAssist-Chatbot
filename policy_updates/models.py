@@ -34,3 +34,22 @@ class GovUpdate(models.Model):
     
     def __str__(self):
         return f"{self.title} ({self.get_category_display()})"
+
+
+class UserUpdateView(models.Model):
+    """
+    Tracks which government updates each user has viewed.
+    Used for notification badges showing unread updates.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='update_views')
+    update = models.ForeignKey(GovUpdate, on_delete=models.CASCADE, related_name='user_views')
+    viewed_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'update')
+        ordering = ['-viewed_at']
+        verbose_name = 'User Update View'
+        verbose_name_plural = 'User Update Views'
+    
+    def __str__(self):
+        return f"{self.user.username} viewed {self.update.title}"

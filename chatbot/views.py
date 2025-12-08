@@ -175,11 +175,18 @@ def chatbot_home(request):
     # differently if desired — but do not merge admin data with regular users.
     chat_sessions = ChatSession.objects.filter(user=request.user)
 
+    # Count unread government updates
+    from policy_updates.models import GovUpdate, UserUpdateView
+    all_updates = GovUpdate.objects.all()
+    viewed_update_ids = UserUpdateView.objects.filter(user=request.user).values_list('update_id', flat=True)
+    unread_updates_count = all_updates.exclude(id__in=viewed_update_ids).count()
+
     context = {
         'user_profile': user_profile,
         'chat_sessions': chat_sessions,
         'is_admin': request.user.is_staff or request.user.is_superuser,
         'due_today_count': FarmReminder.objects.filter(user=request.user, date=date.today(), status='pending').count(),
+        'unread_updates_count': unread_updates_count,
     }
     return render(request, 'chatbot.html', context)
 

@@ -475,6 +475,9 @@
                 </a>
                 <a href="{% url 'policy_updates:user_list' %}" class="header-btn" title="Government Updates">
                     <i class="fas fa-landmark"></i>
+                    {% if unread_updates_count > 0 %}
+                    <span class="notification-badge">{{ unread_updates_count }}</span>
+                    {% endif %}
                 </a>
                 <a href="{% url 'weather:index' %}" class="header-btn" title="Weather & Insights">
                     <i class="fas fa-cloud-sun"></i>

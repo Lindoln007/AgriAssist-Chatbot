@@ -83,6 +83,8 @@ def admin_delete(request, pk):
 @login_required
 def user_list(request):
     """User-facing page to view all government updates"""
+    from .models import UserUpdateView
+    
     updates = GovUpdate.objects.all()
     
     # Filter by category
@@ -97,6 +99,10 @@ def user_list(request):
             Q(title__icontains=search) | 
             Q(content__icontains=search)
         )
+    
+    # Mark all displayed updates as viewed by this user
+    for update in updates:
+        UserUpdateView.objects.get_or_create(user=request.user, update=update)
     
     # Get all categories for filter dropdown
     categories = GovUpdate.CATEGORY_CHOICES
@@ -113,7 +119,12 @@ def user_list(request):
 @login_required
 def user_detail(request, pk):
     """User-facing page to view full details of a government update"""
+    from .models import UserUpdateView
+    
     update = get_object_or_404(GovUpdate, pk=pk)
+    
+    # Mark this update as viewed by this user
+    UserUpdateView.objects.get_or_create(user=request.user, update=update)
     
     # Check if update is new (posted within last 7 days)
     is_new = update.date_posted >= (datetime.now().date() - timedelta(days=7))
