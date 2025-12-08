@@ -142,7 +142,7 @@
         [data-theme="dark"] .header-btn {
             background: transparent;
             color: var(--text-main);
-            border-color: rgba(255,255,255,0.06);
+            border-color: rgba(255, 255, 255, 0.06);
         }
 
         /* Dark mode scrollbar styling for the sidebar/content areas */
@@ -150,10 +150,12 @@
         [data-theme="dark"] .sidebar::-webkit-scrollbar {
             width: 10px;
         }
+
         [data-theme="dark"] .content-scroll::-webkit-scrollbar-track,
         [data-theme="dark"] .sidebar::-webkit-scrollbar-track {
             background: transparent;
         }
+
         [data-theme="dark"] .content-scroll::-webkit-scrollbar-thumb,
         [data-theme="dark"] .sidebar::-webkit-scrollbar-thumb {
             background: #374151;
@@ -364,11 +366,11 @@
                 <form method="GET" style="display: flex; gap: 15px; flex: 1; flex-wrap: wrap;">
                     <select name="category" onchange="this.form.submit()">
                         <option value="">All Categories</option>
-                            {% for value, label in categories %}
-                            <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>
-                                {{ label }}
-                            </option>
-                            {% endfor %}
+                        {% for value, label in categories %}
+                        <option value="{{ value }}" {% if selected_category==value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
                     </select>
                     <input type="text" name="search" placeholder="Search updates..."
                         value="{{ search_query|default:'' }}">
@@ -383,8 +385,9 @@
                 {% for update in updates %}
                 <div class="update-card" onclick="window.location='{% url 'policy_updates:user_detail' update.id %}'">
                     <div class="update-header">
-                        <span class="category-badge category-{{ update.category }}">{{ update.get_category_display }}</span>
-                        {% if update.date_posted >= seven_days_ago %}
+                        <span class="category-badge category-{{ update.category }}">{{ update.get_category_display
+                            }}</span>
+                        {% if update.is_new %}
                         <span class="new-badge">NEW</span>
                         {% endif %}
                     </div>

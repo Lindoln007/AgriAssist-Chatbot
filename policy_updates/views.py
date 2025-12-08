@@ -100,9 +100,12 @@ def user_list(request):
             Q(content__icontains=search)
         )
     
-    # Mark all displayed updates as viewed by this user
+    # Get viewed update IDs for this user
+    viewed_update_ids = set(UserUpdateView.objects.filter(user=request.user).values_list('update_id', flat=True))
+    
+    # Annotate each update with whether it's been viewed by this user
     for update in updates:
-        UserUpdateView.objects.get_or_create(user=request.user, update=update)
+        update.is_new = update.id not in viewed_update_ids
     
     # Get all categories for filter dropdown
     categories = GovUpdate.CATEGORY_CHOICES
@@ -112,7 +115,6 @@ def user_list(request):
         'categories': categories,
         'selected_category': category,
         'search_query': search,
-        'seven_days_ago': datetime.now().date() - timedelta(days=7),
     }
     return render(request, 'policy_updates/user_list.html', context)
 
@@ -126,22 +128,27 @@ def user_detail(request, pk):
     # Mark this update as viewed by this user
     UserUpdateView.objects.get_or_create(user=request.user, update=update)
     
-    # Check if update is new (posted within last 7 days)
-    is_new = update.date_posted >= (datetime.now().date() - timedelta(days=7))
+    # Update is no longer new since user is viewing it
+    update.is_new = False
     
     context = {
         'update': update,
-        'is_new': is_new,
+        'is_new': False,  # Never show as new in detail view since user is viewing it
     }
     return render(request, 'policy_updates/user_detail.html', context)
 
 @login_required
 def dashboard_feed(request):
     """Get latest 3 updates for dashboard feed"""
+    from .models import UserUpdateView
+    
     updates = GovUpdate.objects.all()[:3]
     
-    # Mark updates as new if posted within last 7 days
+    # Get viewed update IDs for this user
+    viewed_update_ids = set(UserUpdateView.objects.filter(user=request.user).values_list('update_id', flat=True))
+    
+    # Mark updates as new if user hasn't viewed them
     for update in updates:
-        update.is_new = update.date_posted >= (datetime.now().date() - timedelta(days=7))
+        update.is_new = update.id not in viewed_update_ids
     
     return updates
