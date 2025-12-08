@@ -76,6 +76,8 @@ def login_selection(request):
 def user_login(request):
     """
     User signin view.
+    Allows both regular users and admins to log in and access the chatbot.
+    Admins retain their privileges when logging in through this portal.
     """
     if request.method == 'POST':
         try:
@@ -89,10 +91,8 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             
             if user is not None:
-                # Check if user is admin, if so deny access to user login
-                if user.is_staff or user.is_superuser:
-                     return JsonResponse({'error': 'Admins must use the Admin Login.'}, status=403)
-
+                # Allow both regular users and admins to log in
+                # Admins will retain their privileges (is_staff, is_superuser)
                 login(request, user)
                 return JsonResponse({'success': True, 'message': 'Login successful!', 'redirect_url': reverse('chatbot:home')})
             else:
