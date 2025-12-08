@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'reminders',
     'policy_updates',
     'weather',
-    'settings',
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,6 @@
 {% comment %}
 Reusable sidebar include. Expects `current_module` variable to be set by the including template.
-Valid values: 'chatbot', 'policy_updates', 'reminders', 'weather', 'settings' (others fallback to 'chatbot').
+Valid values: 'chatbot', 'policy_updates', 'reminders', 'weather' (others fallback to 'chatbot').
 {% endcomment %}
 
 <div class="sidebar">
@@ -21,9 +21,6 @@ Valid values: 'chatbot', 'policy_updates', 'reminders', 'weather', 'settings' (o
         <a href="{% url 'policy_updates:user_list' %}" class="nav-link">
             <i class="fas fa-landmark"></i> Government Updates
         </a>
-        <a href="{% url 'settings:index' %}" class="nav-link">
-            <i class="fas fa-cog"></i> Settings
-        </a>
         {% elif current_module == 'policy_updates' %}
         {# Policy updates module sidebar: keep focused links only #}
         <a href="{% url 'chatbot:home' %}" class="nav-link">
@@ -39,22 +36,9 @@ Valid values: 'chatbot', 'policy_updates', 'reminders', 'weather', 'settings' (o
         <a href="{% url 'chatbot:home' %}" class="nav-link">
             <i class="fas fa-comments"></i> Chatbot
         </a>
-        <a href="{% url 'settings:index' %}" class="nav-link">
-            <i class="fas fa-cog"></i> Settings
-        </a>
         {% elif current_module == 'weather' %}
         <a href="{% url 'chatbot:home' %}" class="nav-link">
             <i class="fas fa-arrow-left"></i> Back to Chatbot
-        </a>
-        <a href="{% url 'settings:index' %}" class="nav-link">
-            <i class="fas fa-cog"></i> Settings
-        </a>
-        {% elif current_module == 'settings' %}
-        <a href="{% url 'chatbot:home' %}" class="nav-link">
-            <i class="fas fa-arrow-left"></i> Back to Chatbot
-        </a>
-        <a href="{% url 'settings:index' %}" class="nav-link active">
-            <i class="fas fa-cog"></i> Settings
         </a>
         {% else %}
         {# Fallback links if module not specified #}
@@ -66,9 +50,6 @@ Valid values: 'chatbot', 'policy_updates', 'reminders', 'weather', 'settings' (o
         </a>
         <a href="{% url 'policy_updates:user_list' %}" class="nav-link">
             <i class="fas fa-landmark"></i> Government Updates
-        </a>
-        <a href="{% url 'settings:index' %}" class="nav-link">
-            <i class="fas fa-cog"></i> Settings
         </a>
         {% endif %}
 
