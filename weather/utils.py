@@ -90,7 +90,7 @@ def get_weather_forecast(lat, lon, days=7):
             "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max",
             "forecast_days": int(days),
             "current_weather": "true",
-            "timezone": "auto"
+            "timezone": "Africa/Blantyre"  # Malawi timezone (CAT - UTC+2)
         }
 
         response = requests.get(url, params=params, timeout=12)
