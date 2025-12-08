@@ -367,7 +367,7 @@
                     <select name="category" onchange="this.form.submit()">
                         <option value="">All Categories</option>
                         {% for value, label in categories %}
-                        <option value="{{ value }}" {% if selected_category==value %}selected{% endif %}>
+                        <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>
                             {{ label }}
                         </option>
                         {% endfor %}
