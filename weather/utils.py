@@ -163,24 +163,24 @@ def analyze_weather_for_farming(weather_data):
 
         # Irrigation advice over multi-day window
         if heavy_rain_days >= 2:
-            recommendations.append('\n🌧️ <strong>Irrigation:</strong> Multiple heavy rain days expected. Suspend irrigation and improve drainage where waterlogging is possible.')
+            recommendations.append('🌧️ <strong>Irrigation:</strong> Multiple heavy rain days expected. Suspend irrigation and improve drainage where waterlogging is possible.')
         elif heavy_rain_days == 1:
-            recommendations.append('\n💧 <strong>Irrigation:</strong> Some rain expected; check soil moisture before irrigating. Prefer irrigation early morning if needed.')
+            recommendations.append('💧 <strong>Irrigation:</strong> Some rain expected; check soil moisture before irrigating. Prefer irrigation early morning if needed.')
         else:
             # Estimate soil moisture from precip + temps (best-effort)
             avg_precip = sum(precip[:days_to_show]) / max(1, days_to_show)
             if avg_precip < 1:
-                recommendations.append('\n💧 <strong>Irrigation:</strong> Low rainfall expected. Schedule irrigation in the early morning to reduce evaporation.')
+                recommendations.append('💧 <strong>Irrigation:</strong> Low rainfall expected. Schedule irrigation in the early morning to reduce evaporation.')
             else:
-                recommendations.append('\n✅ <strong>Irrigation:</strong> Rainfall and conditions look adequate for the next few days.')
+                recommendations.append('✅ <strong>Irrigation:</strong> Rainfall and conditions look adequate for the next few days.')
 
         # Field work and spraying guidance
         if any((p and p >= 5) for p in precip[:days_to_show]):
-            recommendations.append('\n🚜 <strong>Field Work:</strong> Expect rain; avoid pesticide/fertilizer applications on wet days. Plan mechanical work on drier windows.')
+            recommendations.append('🚜 <strong>Field Work:</strong> Expect rain; avoid pesticide/fertilizer applications on wet days. Plan mechanical work on drier windows.')
         elif any((w and w >= 25) for w in windmax[:days_to_show]):
-            recommendations.append('\n💨 <strong>Spraying:</strong> High winds expected on some days. Avoid spraying to reduce drift and uneven application.')
+            recommendations.append('💨 <strong>Spraying:</strong> High winds expected on some days. Avoid spraying to reduce drift and uneven application.')
         else:
-            recommendations.append('\n🌱 <strong>Field Work:</strong> Conditions look suitable for planting, weeding and applications during dry windows.')
+            recommendations.append('🌱 <strong>Field Work:</strong> Conditions look suitable for planting, weeding and applications during dry windows.')
 
         # Pest & disease risk
         # Use humidity approximation from hourly if available, otherwise use temp/precip heuristics
@@ -192,19 +192,19 @@ def analyze_weather_for_farming(weather_data):
                 avg_humidity = None
 
         if avg_humidity and avg_humidity > 80 and (today_temp and today_temp > 20):
-            recommendations.append('\n🐛 <strong>Pests & Disease:</strong> High humidity with warm temperatures increases fungal disease risk. Consider scouting and targeted fungicide if symptoms appear.')
+            recommendations.append('🐛 <strong>Pests & Disease:</strong> High humidity with warm temperatures increases fungal disease risk. Consider scouting and targeted fungicide if symptoms appear.')
         elif heavy_rain_days >= 1 and (today_temp and today_temp > 18):
-            recommendations.append('\n🐜 <strong>Pests & Disease:</strong> Rainy warm periods can increase pest activity — increase monitoring frequency.')
+            recommendations.append('🐜 <strong>Pests & Disease:</strong> Rainy warm periods can increase pest activity — increase monitoring frequency.')
         else:
-            recommendations.append('\n🔍 <strong>Pests & Disease:</strong> Maintain routine scouting; no immediate elevated risk detected.')
+            recommendations.append('🔍 <strong>Pests & Disease:</strong> Maintain routine scouting; no immediate elevated risk detected.')
 
         # Heat / Cold alerts for livestock and crops
         if heat_alert_days > 0:
-            recommendations.append('\n🔥 <strong>Heat Alert:</strong> High daytime temperatures expected on some days. Provide shade and extra water for livestock and avoid field labor during peak heat.')
+            recommendations.append('🔥 <strong>Heat Alert:</strong> High daytime temperatures expected on some days. Provide shade and extra water for livestock and avoid field labor during peak heat.')
         if cold_alert_days > 0:
-            recommendations.append('\n❄️ <strong>Cold Alert:</strong> Low night temperatures expected. Protect sensitive seedlings and young livestock.')
+            recommendations.append('❄️ <strong>Cold Alert:</strong> Low night temperatures expected. Protect sensitive seedlings and young livestock.')
 
-        return "\\n".join(recommendations)
+        return "\n\n".join(recommendations)
 
     # --- Fallback: hourly / current-based recommendations (previous behavior) ---
     temp = today_temp
@@ -239,23 +239,23 @@ def analyze_weather_for_farming(weather_data):
 
     # 2. Field Work / Spraying
     if precip_prob > 20:
-        recommendations.append("\n🚜 <strong>Field Work:</strong> Avoid applying fertilizers or pesticides today as rain may wash them away. Delay harvesting to prevent crop spoilage.")
+        recommendations.append("🚜 <strong>Field Work:</strong> Avoid applying fertilizers or pesticides today as rain may wash them away. Delay harvesting to prevent crop spoilage.")
     elif wind_speed and wind_speed > 20:
-        recommendations.append("\n💨 <strong>Spraying:</strong> High wind speeds detected. Avoid spraying pesticides to prevent drift.")
+        recommendations.append("💨 <strong>Spraying:</strong> High wind speeds detected. Avoid spraying pesticides to prevent drift.")
     else:
-        recommendations.append("\n🌱 <strong>Field Work:</strong> Conditions are favorable for planting, weeding, and applying fertilizers.")
+        recommendations.append("🌱 <strong>Field Work:</strong> Conditions are favorable for planting, weeding, and applying fertilizers.")
 
     # 3. Pest & Disease
     if avg_humidity and avg_humidity > 80 and temp and temp > 20:
-        recommendations.append("\n🐛 <strong>Pests & Disease:</strong> High humidity and warm temperatures favor fungal diseases like blight. Monitor crops closely.")
+        recommendations.append("🐛 <strong>Pests & Disease:</strong> High humidity and warm temperatures favor fungal diseases like blight. Monitor crops closely.")
     else:
-        recommendations.append("\n🔍 <strong>Pests & Disease:</strong> Continue routine scouting.")
+        recommendations.append("🔍 <strong>Pests & Disease:</strong> Continue routine scouting.")
 
     # 4. Livestock
     if temp and temp > 30:
-        recommendations.append("\n🐄 <strong>Livestock:</strong> High temperatures expected. Ensure animals have plenty of shade and water to prevent heat stress.")
+        recommendations.append("🐄 <strong>Livestock:</strong> High temperatures expected. Ensure animals have plenty of shade and water to prevent heat stress.")
     elif temp and temp < 15:
-        recommendations.append("\n🐔 <strong>Livestock:</strong> Cooler temperatures expected. Ensure young animals (chicks, piglets) have adequate warmth.")
+        recommendations.append("🐔 <strong>Livestock:</strong> Cooler temperatures expected. Ensure young animals (chicks, piglets) have adequate warmth.")
 
     return "\n\n".join(recommendations)
 
@@ -273,5 +273,3 @@ def extract_location_from_text(text):
             return loc.title()
             
     return None
-
-
