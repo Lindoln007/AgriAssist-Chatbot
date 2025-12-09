@@ -26,6 +26,7 @@
             --bg-color: #1A202C;
             --card-bg: #2D3748;
             --text-main: #F7FAFC;
+            --sidebar-bg: #171923;
         }
 
         * {
@@ -218,6 +219,33 @@
             color: var(--text-light);
             margin-bottom: 5px;
         }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-main);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] .header-btn {
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="dark"] .header-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 
@@ -233,9 +261,14 @@
                 </a>
                 <h1>{{ farmer.name }}</h1>
             </div>
-            <a href="{% url 'farmers:visit_create' farmer.id %}" class="btn btn-primary">
-                <i class="fas fa-clipboard-check"></i> Log Visit
-            </a>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <a href="{% url 'farmers:visit_create' farmer.id %}" class="btn btn-primary">
+                    <i class="fas fa-clipboard-check"></i> Log Visit
+                </a>
+                <button id="theme-toggle-btn" class="header-btn" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </div>
 
         <div class="content-scroll">
@@ -294,8 +327,7 @@
 
                     {% if visit.follow_up_required and visit.follow_up_date %}
                     <div class="visit-section" style="color: #DD6B20;">
-                        <i class="fas fa-exclamation-circle"></i> Follow-up planned for {{ visit.follow_up_date|date:"M
-                        d" }}
+                        <i class="fas fa-exclamation-circle"></i> Follow-up planned for {{ visit.follow_up_date|date:"M d" }}
                     </div>
                     {% endif %}
                 </div>
@@ -307,6 +339,31 @@
             </div>
         </div>
     </div>
+    </div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        const savedTheme = localStorage.getItem('chatbot_theme') || 'light';
+
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('chatbot_theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('chatbot_theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+    </script>
 </body>
 
 </html>
