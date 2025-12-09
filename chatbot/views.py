@@ -187,7 +187,15 @@ def chatbot_home(request):
         'is_admin': request.user.is_staff or request.user.is_superuser,
         'due_today_count': FarmReminder.objects.filter(user=request.user, date=date.today(), status='pending').count(),
         'unread_updates_count': unread_updates_count,
+        'unread_reports_count': 0,
     }
+
+    # Add unread report count for admins
+    if request.user.is_staff or request.user.is_superuser:
+        from reports.models import Report
+        # Assuming 'is_read' field exists, otherwise we treat all as new for now or add the field
+        # The Report model created earlier has 'is_read' defaulting to False
+        context['unread_reports_count'] = Report.objects.filter(is_read=False).count()
     return render(request, 'chatbot.html', context)
 
 @login_required

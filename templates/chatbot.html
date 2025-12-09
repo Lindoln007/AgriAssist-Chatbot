@@ -485,6 +485,14 @@
                 <a href="{% url 'weather:index' %}" class="header-btn" title="Weather & Insights">
                     <i class="fas fa-cloud-sun"></i>
                 </a>
+                {% if user.is_staff %}
+                <a href="{% url 'reports:list' %}" class="header-btn" title="Admin Reports">
+                    <i class="fas fa-clipboard-list"></i>
+                    {% if unread_reports_count > 0 %}
+                    <span class="notification-badge">{{ unread_reports_count }}</span>
+                    {% endif %}
+                </a>
+                {% endif %}
                 <button id="theme-toggle-btn" class="header-btn" title="Toggle Dark Mode">
                     <i class="fas fa-moon"></i>
                 </button>
