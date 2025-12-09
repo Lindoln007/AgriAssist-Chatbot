@@ -21,6 +21,9 @@ Valid values: 'chatbot', 'policy_updates', 'reminders', 'weather' (others fallba
         <a href="{% url 'policy_updates:user_list' %}" class="nav-link">
             <i class="fas fa-landmark"></i> Government Updates
         </a>
+        <a href="{% url 'farmers:list' %}" class="nav-link">
+            <i class="fas fa-users"></i> Farmer Database
+        </a>
         {% elif current_module == 'policy_updates' %}
         {# Policy updates module sidebar: keep focused links only #}
         <a href="{% url 'chatbot:home' %}" class="nav-link">
@@ -28,6 +31,16 @@ Valid values: 'chatbot', 'policy_updates', 'reminders', 'weather' (others fallba
         </a>
         <a href="{% url 'policy_updates:user_list' %}" class="nav-link active">
             <i class="fas fa-landmark"></i> Government Updates
+        </a>
+        {% elif current_module == 'farmers' %}
+        <a href="{% url 'chatbot:home' %}" class="nav-link">
+            <i class="fas fa-arrow-left"></i> Back to Chatbot
+        </a>
+        <a href="{% url 'farmers:list' %}" class="nav-link active">
+            <i class="fas fa-users"></i> Farmer Database
+        </a>
+        <a href="{% url 'farmers:create' %}" class="nav-link">
+            <i class="fas fa-user-plus"></i> Add Farmer
         </a>
         {% elif current_module == 'reminders' %}
         <a href="{% url 'reminders:index' %}" class="nav-link active">

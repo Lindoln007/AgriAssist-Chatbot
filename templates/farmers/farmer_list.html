@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Database - AgriAssist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2F855A;
+            --primary-dark: #22543D;
+            --primary-light: #48BB78;
+            --accent: #F6E05E;
+            --bg-color: #FDFBF7;
+            --sidebar-bg: #1C4532;
+            --text-main: #2D3748;
+            --text-light: #A0AEC0;
+            --white: #FFFFFF;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --border-color: rgba(0, 0, 0, 0.05);
+            --card-bg: #FFFFFF;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1A202C;
+            --sidebar-bg: #171923;
+            --text-main: #F7FAFC;
+            --text-light: #A0AEC0;
+            --white: #2D3748;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --card-bg: #2D3748;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            height: 100vh;
+            color: var(--text-main);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: scale(1.1);
+        }
+
+        [data-theme="dark"] .header-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .header {
+            background: var(--card-bg);
+            border-bottom-color: var(--border-color);
+        }
+
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 40px;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .farmers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .farmer-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .farmer-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-light);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .card-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-info p {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 15px;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat {
+            font-size: 13px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat i {
+            color: var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'includes/sidebar.html' with current_module='farmers' %}
+
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-users"></i> Farmer Database</h1>
+            <div style="display: flex; gap: 10px;">
+                <button id="theme-toggle-btn" class="header-btn" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="content-scroll">
+            <div class="action-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <form method="GET" action="">
+                        <input type="text" name="q" placeholder="Search by name, village, or crop..."
+                            value="{{ search_query|default:'' }}">
+                    </form>
+                </div>
+                <a href="{% url 'farmers:create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Farmer
+                </a>
+            </div>
+
+            {% if messages %}
+            <div style="margin-bottom: 20px;">
+                {% for message in messages %}
+                <div
+                    style="padding: 12px; border-radius: 8px; background: {% if message.tags == 'error' %}#FEB2B2{% else %}#C6F6D5{% endif %}; color: {% if message.tags == 'error' %}#9B2C2C{% else %}#22543D{% endif %};">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if farmers %}
+            <div class="farmers-grid">
+                {% for farmer in farmers %}
+                <div class="farmer-card" onclick="window.location='{% url 'farmers:detail' farmer.id %}'">
+                    <div class="card-header">
+                        <div style="display: flex; gap: 15px;">
+                            <div class="avatar">
+                                {{ farmer.name|slice:":1" }}
+                            </div>
+                            <div class="card-info">
+                                <h3>{{ farmer.name }}</h3>
+                                <p><i class="fas fa-map-marker-alt"></i> {{ farmer.village }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 14px; color: var(--text-main);">
+                        <strong>Main Crops:</strong> {{ farmer.main_crops }}
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat">
+                            <i class="fas fa-ruler-combined"></i> {{ farmer.farm_size_acres|default:"-" }} acres
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-calendar-check"></i> {{ farmer.visits.count }} Visits
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-user-friends"></i>
+                <h2>No farmers found</h2>
+                <p>Start by adding your first farmer to the database.</p>
+                <br>
+                <a href="{% url 'farmers:create' %}" class="btn btn-primary">Add Farmer</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Simple theme toggle script (shared logic)
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        const savedTheme = localStorage.getItem('chatbot_theme') || 'light';
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        applyTheme(savedTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('chatbot_theme', newTheme);
+            applyTheme(newTheme);
+        });
+    </script>
+</body>
+
+</html>

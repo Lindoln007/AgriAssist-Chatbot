@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Farmer - AgriAssist</title>
+    <!-- Same CSS/Fonts as list -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2F855A;
+            --primary-dark: #22543D;
+            --bg-color: #FDFBF7;
+            --sidebar-bg: #1C4532;
+            --text-main: #2D3748;
+            --text-light: #A0AEC0;
+            --card-bg: #FFFFFF;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1A202C;
+            --card-bg: #2D3748;
+            --text-main: #F7FAFC;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            height: 100vh;
+            color: var(--text-main);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'includes/sidebar.html' with current_module='farmers' %}
+
+    <div class="main-content">
+        <div class="form-container">
+            <h1><i class="fas fa-user-plus"></i> Add New Farmer</h1>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" name="name" required placeholder="e.g. John Banda">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone" placeholder="e.g. 0991234567">
+                </div>
+
+                <div class="form-group">
+                    <label>Village / Location *</label>
+                    <input type="text" name="village" required placeholder="e.g. Chilinde">
+                </div>
+
+                <div class="form-group">
+                    <label>Farm Size (Acres)</label>
+                    <input type="number" step="0.1" name="farm_size" placeholder="e.g. 2.5">
+                </div>
+
+                <div class="form-group">
+                    <label>Main Crops</label>
+                    <input type="text" name="crops" placeholder="e.g. Maize, Groundnuts, Tobacco">
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea name="notes" rows="4" placeholder="Any initial observations..."></textarea>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="{% url 'farmers:list' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Farmer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

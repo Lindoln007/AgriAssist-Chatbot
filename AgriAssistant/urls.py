@@ -35,6 +35,7 @@ urlpatterns = [
     path('reminders/', include('reminders.urls')),
     path('policy-updates/', include('policy_updates.urls')),
     path('weather/', include('weather.urls')),
+    path('farmers/', include('farmers.urls')),
 ]
 
 # Serve media files in development

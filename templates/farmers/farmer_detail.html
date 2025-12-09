@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ farmer.name }} - AgriAssist</title>
+    <!-- Styles similar to list but with timeline -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2F855A;
+            --primary-dark: #22543D;
+            --bg-color: #FDFBF7;
+            --sidebar-bg: #1C4532;
+            --text-main: #2D3748;
+            --text-light: #A0AEC0;
+            --card-bg: #FFFFFF;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1A202C;
+            --card-bg: #2D3748;
+            --text-main: #F7FAFC;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            height: 100vh;
+            color: var(--text-main);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content-scroll {
+            padding: 30px 40px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .profile-header {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .avatar-lg {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .info-item label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item div {
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            border-left: 2px solid var(--border-color);
+            margin-left: 10px;
+        }
+
+        .visit-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .visit-card::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 3px solid var(--bg-color);
+        }
+
+        .visit-date {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .visit-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .visit-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .visit-section h4 {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'includes/sidebar.html' with current_module='farmers' %}
+
+    <div class="main-content">
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="{% url 'farmers:list' %}"
+                    style="text-decoration: none; color: var(--text-main); font-size: 18px;">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1>{{ farmer.name }}</h1>
+            </div>
+            <a href="{% url 'farmers:visit_create' farmer.id %}" class="btn btn-primary">
+                <i class="fas fa-clipboard-check"></i> Log Visit
+            </a>
+        </div>
+
+        <div class="content-scroll">
+            <div class="profile-header">
+                <div class="avatar-lg">{{ farmer.name|slice:":1" }}</div>
+                <div style="flex: 1;">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Location</label>
+                            <div>{{ farmer.village }}</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Phone</label>
+                            <div>{{ farmer.phone_number|default:"N/A" }}</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Farm Size</label>
+                            <div>{{ farmer.farm_size_acres|default:"-" }} acres</div>
+                        </div>
+                        <div class="info-item">
+                            <label>Joined</label>
+                            <div>{{ farmer.joined_date|date:"M Y" }}</div>
+                        </div>
+                    </div>
+                    {% if farmer.notes %}
+                    <div style="margin-top: 20px; font-size: 14px; color: var(--text-light);">
+                        Does: {{ farmer.main_crops }}
+                        <br>
+                        Note: {{ farmer.notes }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Activity History</h2>
+            </div>
+
+            <div class="timeline">
+                {% for visit in visits %}
+                <div class="visit-card">
+                    <div class="visit-date">{{ visit.visit_date|date:"l, F d, Y" }}</div>
+                    <div class="visit-title">{{ visit.purpose }}</div>
+
+                    <div class="visit-section">
+                        <h4>Observations</h4>
+                        <p>{{ visit.observations|linebreaksbr }}</p>
+                    </div>
+
+                    {% if visit.recommendations %}
+                    <div class="visit-section">
+                        <h4>Recommendations</h4>
+                        <p>{{ visit.recommendations|linebreaksbr }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if visit.follow_up_required and visit.follow_up_date %}
+                    <div class="visit-section" style="color: #DD6B20;">
+                        <i class="fas fa-exclamation-circle"></i> Follow-up planned for {{ visit.follow_up_date|date:"M
+                        d" }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div style="padding: 20px; color: var(--text-light);">
+                    No visits logged yet.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
