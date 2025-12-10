@@ -64,6 +64,11 @@ def farmer_detail(request, pk):
     farmer = get_object_or_404(Farmer, pk=pk, extension_officer=request.user)
     visits = farmer.visits.all()
     
+    # Check which visits have been reported
+    from reports.models import Report
+    for visit in visits:
+        visit.has_report = Report.objects.filter(visit=visit).exists()
+    
     context = {
         'farmer': farmer,
         'visits': visits,

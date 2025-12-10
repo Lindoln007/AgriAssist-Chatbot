@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'policy_updates',
     'weather',
     'farmers',
+    'reports',
 ]
 
 MIDDLEWARE = [

@@ -246,6 +246,39 @@
         [data-theme="dark"] .header-btn:hover {
             background: rgba(255, 255, 255, 0.1);
         }
+
+        .btn-report {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-report:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--text-main);
+            border-color: var(--text-light);
+        }
+
+        .btn-report-sent {
+            background-color: rgba(47, 133, 90, 0.1);
+            color: var(--primary);
+            border: 1px solid transparent;
+            cursor: default;
+        }
+
+        [data-theme="dark"] .btn-report:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
     </style>
 </head>
 
@@ -330,6 +363,23 @@
                         <i class="fas fa-exclamation-circle"></i> Follow-up planned for {{ visit.follow_up_date|date:"M d" }}
                     </div>
                     {% endif %}
+
+                    <!-- Report Button -->
+                    <!-- Report Button -->
+                    <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                        {% if visit.has_report %}
+                        <button class="btn-report btn-report-sent" disabled>
+                            <i class="fas fa-check-circle"></i> Report Sent
+                        </button>
+                        {% else %}
+                        <form action="{% url 'reports:submit' visit.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-report">
+                                <i class="fas fa-bullhorn"></i> Report to Admin
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
                 </div>
                 {% empty %}
                 <div style="padding: 20px; color: var(--text-light);">

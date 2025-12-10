@@ -26,6 +26,8 @@
             --bg-color: #1A202C;
             --card-bg: #2D3748;
             --text-main: #F7FAFC;
+            --sidebar-bg: #171923;
+            --border-color: rgba(255, 255, 255, 0.1);
         }
 
         .sidebar {
@@ -79,8 +81,23 @@
 
         .main-content {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content-scroll {
             padding: 40px;
             overflow-y: auto;
+            flex: 1;
         }
 
         .form-container {
@@ -146,6 +163,43 @@
             border: 1px solid var(--border-color);
             margin-right: 10px;
         }
+
+
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-main);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] .header-btn {
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="dark"] .header-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Input overrides for dark mode consistency */
+        [data-theme="dark"] input,
+        [data-theme="dark"] textarea,
+        [data-theme="dark"] select {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
     </style>
 </head>
 
@@ -153,52 +207,97 @@
     {% include 'includes/sidebar.html' with current_module='farmers' %}
 
     <div class="main-content">
-        <div class="form-container">
-            <h1><i class="fas fa-clipboard-check"></i> Log Field Visit</h1>
-            <p class="subtitle">For Farmer: <strong>{{ farmer.name }}</strong></p>
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="{% url 'farmers:detail' farmer.id %}"
+                    style="text-decoration: none; color: var(--text-main); font-size: 18px;">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1>Log Field Visit</h1>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button id="theme-toggle-btn" class="header-btn" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
 
-            <form method="POST">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label>Date of Visit</label>
-                    <input type="date" name="visit_date" required value="{% now 'Y-m-d' %}">
-                </div>
+        <div class="content-scroll">
+            <div class="form-container">
+                <h2 style="margin-bottom: 30px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-clipboard-check"></i> New Visit Entry
+                </h2>
+                <p class="subtitle" style="margin-bottom: 25px;">For Farmer: <strong>{{ farmer.name }}</strong></p>
 
-                <div class="form-group">
-                    <label>Purpose of Visit</label>
-                    <input type="text" name="purpose" list="purposes" required placeholder="e.g. Routine Inspection">
-                    <datalist id="purposes">
-                        <option value="Routine Inspection">
-                        <option value="Pest/Disease Check">
-                        <option value="Harvest Assessment">
-                        <option value="Input Distribution">
-                        <option value="Training Follow-up">
-                    </datalist>
-                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Date of Visit</label>
+                        <input type="date" name="visit_date" required value="{% now 'Y-m-d' %}">
+                    </div>
 
-                <div class="form-group">
-                    <label>Key Observations</label>
-                    <textarea name="observations" rows="4" required
-                        placeholder="What did you see? Crop health, issues, etc."></textarea>
-                </div>
+                    <div class="form-group">
+                        <label>Purpose of Visit</label>
+                        <input type="text" name="purpose" list="purposes" required
+                            placeholder="e.g. Routine Inspection">
+                        <datalist id="purposes">
+                            <option value="Routine Inspection">
+                            <option value="Pest/Disease Check">
+                            <option value="Harvest Assessment">
+                            <option value="Input Distribution">
+                            <option value="Training Follow-up">
+                        </datalist>
+                    </div>
 
-                <div class="form-group">
-                    <label>Recommendations Given</label>
-                    <textarea name="recommendations" rows="3" placeholder="Advice given to the farmer..."></textarea>
-                </div>
+                    <div class="form-group">
+                        <label>Key Observations</label>
+                        <textarea name="observations" rows="4" required
+                            placeholder="What did you see? Crop health, issues, etc."></textarea>
+                    </div>
 
-                <div class="form-group">
-                    <label>Follow-up Date (Optional)</label>
-                    <input type="date" name="follow_up_date">
-                </div>
+                    <div class="form-group">
+                        <label>Recommendations Given</label>
+                        <textarea name="recommendations" rows="3"
+                            placeholder="Advice given to the farmer..."></textarea>
+                    </div>
 
-                <div style="margin-top: 30px;">
-                    <a href="{% url 'farmers:detail' farmer.id %}" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Save Visit Log</button>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label>Follow-up Date (Optional)</label>
+                        <input type="date" name="follow_up_date">
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <a href="{% url 'farmers:detail' farmer.id %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Visit Log</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        const savedTheme = localStorage.getItem('chatbot_theme') || 'light';
+
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('chatbot_theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('chatbot_theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+    </script>
 </body>
 
 </html>
