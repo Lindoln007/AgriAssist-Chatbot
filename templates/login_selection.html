@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/global-styles.css">
     <style>
         :root {
             --primary: #2F855A;
@@ -27,10 +28,7 @@
 
         body {
             font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(#2F855A 0.5px, transparent 0.5px), radial-gradient(#2F855A 0.5px, var(--bg-color) 0.5px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
+            background: linear-gradient(135deg, #FDFBF7 0%, #F0FDF4 100%);
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
@@ -38,60 +36,112 @@
             align-items: center;
             padding: 20px;
             color: var(--text-main);
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(47, 133, 90, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: backgroundMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1A202C 0%, #171923 100%);
         }
 
         .container {
             width: 100%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            padding: 48px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            animation: slideUp 0.5s ease-out;
+            max-width: 680px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            padding: 52px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
             text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: containerEntry 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes slideUp {
+        @keyframes containerEntry {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px) scale(0.95);
             }
-
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
+        }
+
+        [data-theme="dark"] .container {
+            background: rgba(45, 55, 72, 0.95);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         .logo-icon {
-            width: 64px;
-            height: 64px;
-            background: var(--primary);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2F855A 0%, #48BB78 100%);
             color: white;
-            border-radius: 20px;
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 20px;
-            box-shadow: 0 10px 15px -3px rgba(47, 133, 90, 0.3);
-            transform: rotate(-5deg);
+            font-size: 40px;
+            margin: 0 auto 24px;
+            box-shadow: 0 15px 30px -8px rgba(47, 133, 90, 0.4);
+            transform: rotate(-6deg);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        .logo-icon:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: rotate(-6deg) translateY(0); }
+            50% { transform: rotate(-6deg) translateY(-8px); }
         }
 
         h1 {
             color: var(--primary-dark);
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #2F855A 0%, #48BB78 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        [data-theme="dark"] h1 {
+            background: linear-gradient(135deg, #48BB78 0%, #68D391 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         p {
             color: var(--text-light);
-            font-size: 15px;
-            margin-bottom: 40px;
+            font-size: 16px;
+            margin-bottom: 48px;
         }
 
         .options-grid {
@@ -109,51 +159,96 @@
         .option-card {
             background: white;
             border: 2px solid #E2E8F0;
-            border-radius: 20px;
-            padding: 30px 20px;
+            border-radius: 24px;
+            padding: 36px 24px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-decoration: none;
             color: var(--text-main);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(47, 133, 90, 0.05) 0%, rgba(72, 187, 120, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .option-card:hover::before {
+            opacity: 1;
         }
 
         .option-card:hover {
             border-color: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px -5px rgba(47, 133, 90, 0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(47, 133, 90, 0.25);
+        }
+
+        [data-theme="dark"] .option-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .option-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
         }
 
         .option-icon {
-            width: 60px;
-            height: 60px;
-            background: #F0FDF4;
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #F0FDF4 0%, #C6F6D5 100%);
             color: var(--primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            transition: all 0.3s;
+            font-size: 28px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 1;
         }
 
         .option-card:hover .option-icon {
-            background: var(--primary);
+            background: linear-gradient(135deg, #2F855A 0%, #48BB78 100%);
             color: white;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 20px -5px rgba(47, 133, 90, 0.4);
+        }
+
+        [data-theme="dark"] .option-icon {
+            background: linear-gradient(135deg, rgba(47, 133, 90, 0.2) 0%, rgba(72, 187, 120, 0.2) 100%);
         }
 
         .option-title {
-            font-weight: 600;
-            font-size: 18px;
+            font-weight: 700;
+            font-size: 20px;
+            position: relative;
+            z-index: 1;
+            transition: color 0.3s;
+        }
+
+        .option-card:hover .option-title {
+            color: var(--primary);
         }
 
         .option-desc {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-light);
-            line-height: 1.4;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
         }
     </style>
 </head>
@@ -184,6 +279,15 @@
             </a>
         </div>
     </div>
+
+    <script src="/static/js/global-utils.js"></script>
+    <script>
+        // Stagger animation for option cards
+        document.querySelectorAll('.option-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.animation = `slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.2 + index * 0.15}s forwards`;
+        });
+    </script>
 </body>
 
 </html>

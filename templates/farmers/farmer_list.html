@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/global-styles.css">
     <style>
         :root {
             --primary: #2F855A;
@@ -94,23 +95,42 @@
         }
 
         .header {
-            padding: 20px 40px;
+            padding: 24px 44px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
+            background: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+            opacity: 0.3;
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 26px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+            font-weight: 700;
+        }
+
+        .header h1 i {
+            font-size: 28px;
         }
 
         .header-btn {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             border: 1px solid var(--border-color);
             background: transparent;
@@ -119,21 +139,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 16px;
         }
 
         .header-btn:hover {
-            background: rgba(0, 0, 0, 0.05);
-            transform: scale(1.1);
+            background: rgba(47, 133, 90, 0.1);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 16px -4px rgba(47, 133, 90, 0.3);
         }
 
         [data-theme="dark"] .header-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        [data-theme="dark"] .header {
-            background: var(--card-bg);
-            border-bottom-color: var(--border-color);
+            background: rgba(72, 187, 120, 0.15);
         }
 
         .content-scroll {
@@ -158,12 +175,21 @@
 
         .search-box input {
             width: 100%;
-            padding: 12px 20px 12px 45px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
+            padding: 14px 20px 14px 48px;
+            border-radius: 14px;
+            border: 2px solid var(--border-color);
             background: var(--card-bg);
             color: var(--text-main);
             font-family: inherit;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(47, 133, 90, 0.12);
+            transform: translateY(-1px);
         }
 
         .search-box i {
@@ -175,26 +201,49 @@
         }
 
         .btn {
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 14px 28px;
+            border-radius: 14px;
             border: none;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 15px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
+            box-shadow: 0 8px 16px -4px rgba(47, 133, 90, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px -6px rgba(47, 133, 90, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
         }
 
         .farmers-grid {
@@ -205,20 +254,39 @@
 
         .farmer-card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 18px;
+            padding: 24px;
             box-shadow: var(--shadow);
             border: 1px solid var(--border-color);
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .farmer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(47, 133, 90, 0.03) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .farmer-card:hover::before {
+            opacity: 1;
         }
 
         .farmer-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.15);
             border-color: var(--primary);
         }
 
@@ -229,16 +297,22 @@
         }
 
         .avatar {
-            width: 50px;
-            height: 50px;
-            background: var(--primary-light);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 22px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(47, 133, 90, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .farmer-card:hover .avatar {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .card-info h3 {
@@ -274,14 +348,29 @@
 
         .empty-state {
             text-align: center;
-            padding: 60px;
+            padding: 80px 60px;
             color: var(--text-light);
+            animation: fadeIn 0.6s;
         }
 
         .empty-state i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            opacity: 0.5;
+            font-size: 64px;
+            margin-bottom: 24px;
+            opacity: 0.6;
+            color: var(--primary-light);
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 24px;
         }
     </style>
 </head>
@@ -365,24 +454,13 @@
         </div>
     </div>
 
+    <script src="/static/js/global-utils.js"></script>
     <script>
-        // Simple theme toggle script (shared logic)
-        const themeToggleBtn = document.getElementById('theme-toggle-btn');
-        const themeIcon = themeToggleBtn.querySelector('i');
-        const savedTheme = localStorage.getItem('chatbot_theme') || 'light';
-
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
-
-        applyTheme(savedTheme);
-
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('chatbot_theme', newTheme);
-            applyTheme(newTheme);
+        // Theme is now handled by global-utils.js
+        
+        // Add stagger animation to farmer cards
+        document.querySelectorAll('.farmer-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.08}s`;
         });
     </script>
 </body>
